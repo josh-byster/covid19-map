@@ -1,0 +1,19 @@
+{
+  "name": "covid",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/josh-byster/covid19-spread-animation.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/josh-byster/covid19-spread-animation/issues"
+  },
+  "homepage": "https://github.com/josh-byster/covid19-spread-animation#readme"
+}
