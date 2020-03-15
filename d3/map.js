@@ -5,7 +5,7 @@ const SCALE_MIN = 0;
 const SCALE_MAX = 70000;
 const BIGGEST_MARKER_PX = 50;
 const TOPOLOGY_LINK =
-  "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-10m.json";
+  "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
 const CONFIRMED_CASES_LINK =
   "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv";
@@ -29,12 +29,28 @@ const projection = d3
 
 const path = d3.geoPath(projection);
 
+
+
+const zoom = d3.zoom()
+.scaleExtent([1, 8])
+.on('zoom', zoomed);
+
+function zoomed() {
+  g
+    .selectAll('path') // To prevent stroke width from scaling
+    .attr('transform', d3.event.transform);
+}
+
+
+
 const svg = d3
   .select(".visual")
   .append("svg")
   .attr("width", width)
-  .attr("height", height);
-
+  .attr("height", height)
+  .call(zoom)
+  
+const g = svg.append('g');
 // Define the div for the tooltip
 const tooltip = d3
   .select("body")
@@ -114,7 +130,7 @@ const getNumInfectedCountries = data => {
   return data.map(obj => obj.country).filter((val, i, arr) => arr.indexOf(val) === i);
 };
 const renderForState = () => {
-  const updates = svg
+  const updates = g
     .selectAll("circle")
     .data(dateList[curDateIdx], d => `${d.lat}${d.long}`);
   updates
@@ -147,7 +163,7 @@ d3.json(TOPOLOGY_LINK)
   .then(topology => {
     // Create the base map
     const geojson = topojson.feature(topology, topology.objects.countries);
-    svg
+    g
       .selectAll("path")
       .data(geojson.features)
       .enter()
@@ -157,11 +173,11 @@ d3.json(TOPOLOGY_LINK)
   .then(() => d3.csv(CONFIRMED_CASES_LINK))
   .then(data => {
     updateDateMap(data);
-    svg.append("g").attr("class", "bubble");
+    g.append("g").attr("class", "bubble");
 
-    // setInterval(() => {
-    //   incrementDate();
-    //   renderForState();
-    // }, 500);
+    setInterval(() => {
+      incrementDate();
+      renderForState();
+    }, 30);
     renderForState();
   });
