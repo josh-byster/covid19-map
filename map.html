@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<meta charset="utf-8" />
+<style>
+  svg {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  path {
+    fill: #ccc;
+    stroke: #fff;
+    stroke-width: 0.01px;
+  }
+  .bubble {
+    fill-opacity: 0.3;
+    fill: #ff0000;
+    stroke: #fff;
+    stroke-width: 0.5px;
+  }
+  div.tooltip {
+    position: absolute;
+    text-align: center;
+    /* width: 50px; */
+    /* height: 50px; */
+    padding: 10px;
+    font: 12px sans-serif;
+    background: lightsteelblue;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+  }
+</style>
+<body>
+  <script src="https://d3js.org/d3.v5.js"></script>
+  <script src="https://unpkg.com/topojson@3"></script>
+  <script>
+    var width = 1400,
+      height = 800;
+    const CUR_DATE = "3/13/20";
+
+    var projection = d3
+      .geoMercator()
+      .scale(200)
+      .translate([width / 2, height / 2]);
+    var path = d3.geoPath(projection);
+
+    var svg = d3
+      .select("body")
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height);
+
+    // Define the div for the tooltip
+    var tooltip = d3
+      .select("body")
+      .append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
+
+    var url = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-10m.json";
+
+    d3.json(url)
+      .then(topology => {
+        console.log(topology);
+
+        console.log("topojson", topology.objects.countries);
+        var geojson = topojson.feature(topology, topology.objects.countries);
+        console.log("geojson", geojson);
+
+        svg
+          .selectAll("path")
+          .data(geojson.features)
+          .enter()
+          .append("path")
+          .attr("d", path);
+      })
+      .then(_ =>
+        d3.csv(
+          "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"
+        )
+      )
+      .then(data => {
+        const filtered = data
+          .filter(d => d[CUR_DATE] > 0)
+          .map(d => ({
+            lat: d.Lat,
+            long: d.Long,
+            country: d["Country/Region"],
+            count: d[CUR_DATE]
+          }));
+        // console.log(filtered);
+        svg
+          .append("g")
+          .attr("class", "bubble")
+          .selectAll("circle")
+          .data(filtered)
+          .enter()
+          .append("circle")
+          .attr("r", function(d) {
+            const t = d3.scaleSqrt().domain([1,70000]).range([0,100])
+            return t(d.count);
+            // return radius(d.properties.population); //radius var with input (domain) and output (range)
+          })
+          .attr("transform", function(d) {
+            return "translate(" + projection([d.long, d.lat]) + ")";
+          })
+          //add Tool Tip
+          .on("mouseover", function(d) {
+            tooltip
+              .transition()
+              .duration(200)
+              .style("opacity", 0.9);
+            tooltip
+              .html(d.country + "<br/>" + d.count)
+              .style("left", d3.event.pageX + "px")
+              .style("top", d3.event.pageY - 28 + "px");
+          })
+          .on("mouseout", function(d) {
+            tooltip
+              .transition()
+              .duration(500)
+              .style("opacity", 0);
+          });
+      });
+  </script>
+</body>
