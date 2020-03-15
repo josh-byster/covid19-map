@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <meta charset="utf-8" />
 <style>
-  svg {
+  body {
+    font-family: 'Roboto', sans-serif;
+  }
+  .visual {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    width:1000px;
+    height:650px;
   }
   path {
     fill: #bdc3c7;
     stroke: #fff;
-    stroke-width: 0.01px;
+    stroke-width: 0.5px;
   }
 
   div.tooltip {
@@ -18,7 +23,6 @@
     /* width: 50px; */
     /* height: 50px; */
     padding: 10px;
-    font-family: 'Roboto', sans-serif;
     font-size: 15px;
     background: #c0392b;
     border: 0px;
@@ -35,9 +39,26 @@
     fill-opacity: 0.7;
     /* transition: fill-opacity 0.3s ease-in-out; */
   }
+  #title {
+    text-align: center;
+  }
+  #subtitle {
+    text-align: center;
+  }
+  #num-countries {
+    text-align: center;
+  }
+  svg {
+    border: 1px solid black;
+  }
 </style>
 <body>
+  <h1 id="title">Confirmed Number of COVID-19 Cases</h1>
+  <h2 id="subtitle"></h2>
+  <h2 id="num-countries"></h2>
+  <div class="visual">
   <button id="step">Next</button>
+</div>
   <script src="https://d3js.org/d3.v5.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/topojson@3"></script>

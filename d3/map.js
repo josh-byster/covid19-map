@@ -1,8 +1,9 @@
-const width = 1400,
-  height = 800;
+const width = 1000,
+  height = 600;
 const CUR_DATE = "3/13/20";
-const MIN = 0;
-const MAX = 70000;
+const SCALE_MIN = 0;
+const SCALE_MAX = 70000;
+const BIGGEST_MARKER_PX = 50;
 const TOPOLOGY_LINK =
   "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-10m.json";
 
@@ -11,7 +12,7 @@ const CONFIRMED_CASES_LINK =
 
 let dateList = [];
 let allDates = [];
-let curDateIdx = 30;
+let curDateIdx = 0;
 
 const numWithCommas = x => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -19,17 +20,17 @@ const numWithCommas = x => {
 
 const toColor = d3
   .scaleSequentialSqrt(d3.interpolateYlOrRd)
-  .domain([MIN, 35000]);
+  .domain([SCALE_MIN, 35000]);
 
 const projection = d3
   .geoMercator()
-  .scale(200)
-  .translate([width / 2, height / 2]);
+  .scale(150)
+  .translate([width / 2, (3 * height) / 4]);
 
 const path = d3.geoPath(projection);
 
 const svg = d3
-  .select("body")
+  .select(".visual")
   .append("svg")
   .attr("width", width)
   .attr("height", height);
@@ -60,19 +61,19 @@ const updateDateMap = data => {
 const incrementDate = () => {
   curDateIdx = (curDateIdx + 1) % dateList.length;
   console.log(`Cur date idx now set to ${curDateIdx}`);
-}
+};
 d3.select("#step").on("click", function(d, i) {
   incrementDate();
   renderForState();
 });
 
-const applyPropsToNodes = (nodes) => {
+const applyPropsToNodes = nodes => {
   nodes
     .attr("r", function(d) {
       const t = d3
         .scaleSqrt()
-        .domain([MIN, MAX])
-        .range([0, 100]);
+        .domain([SCALE_MIN, SCALE_MAX])
+        .range([0, BIGGEST_MARKER_PX]);
       return t(d.count);
       // return radius(d.properties.population); //radius const with input (domain) and output (range)
     })
@@ -84,7 +85,7 @@ const applyPropsToNodes = (nodes) => {
     })
     //add Tool Tip
     .on("mouseover", function(d) {
-      console.log("Mouse over!")
+      console.log("Mouse over!");
       d3.select(this).classed("hover", true);
       tooltip
         .transition()
@@ -100,32 +101,46 @@ const applyPropsToNodes = (nodes) => {
         .style("top", d3.event.pageY + "px");
     })
     .on("mouseout", function(d) {
-      console.log("Mouse exit")
+      console.log("Mouse exit");
       d3.select(this).classed("hover", false);
       tooltip
         .transition()
         .duration(500)
         .style("opacity", 0);
     });
-}
+};
 
+const getNumInfectedCountries = data => {
+  return data.map(obj => obj.country).filter((val, i, arr) => arr.indexOf(val) === i);
+};
 const renderForState = () => {
-  const updates = svg.selectAll("circle").data(dateList[curDateIdx]);
-  updates.enter().append("circle").call(applyPropsToNodes);
-  updates.attr("r", function(d) {
-    const t = d3
-      .scaleSqrt()
-      .domain([MIN, MAX])
-      .range([0, 100]);
-    return t(d.count);
-    // return radius(d.properties.population); //radius const with input (domain) and output (range)
-  })    .attr("transform", function(d) {
-    return "translate(" + projection([d.long, d.lat]) + ")";
-  })    .attr("fill", d => {
-    return toColor(d.count);
-  });
+  const updates = svg
+    .selectAll("circle")
+    .data(dateList[curDateIdx], d => `${d.lat}${d.long}`);
+  updates
+    .enter()
+    .append("circle")
+    .call(applyPropsToNodes);
+  updates
+    .attr("r", function(d) {
+      const t = d3
+        .scaleSqrt()
+        .domain([SCALE_MIN, SCALE_MAX])
+        .range([0, BIGGEST_MARKER_PX]);
+      return t(d.count);
+      // return radius(d.properties.population); //radius const with input (domain) and output (range)
+    })
+    .attr("fill", d => {
+      return toColor(d.count);
+    });
   updates.exit().remove();
-  console.log(updates)
+  d3.select("#subtitle").html(allDates[curDateIdx]);
+
+  d3.select("#num-countries").html(`Number of countries affected: ${
+    getNumInfectedCountries(dateList[curDateIdx]).length
+  }
+    `
+  );
 };
 
 d3.json(TOPOLOGY_LINK)
@@ -144,6 +159,9 @@ d3.json(TOPOLOGY_LINK)
     updateDateMap(data);
     svg.append("g").attr("class", "bubble");
 
-    // setInterval(() => {incrementDate(); renderForState(); } ,500);
+    // setInterval(() => {
+    //   incrementDate();
+    //   renderForState();
+    // }, 500);
     renderForState();
   });
