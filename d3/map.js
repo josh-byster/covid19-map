@@ -3,10 +3,16 @@ const width = 1400,
 const CUR_DATE = "3/13/20";
 const MIN = 0;
 const MAX = 70000;
-const TOPOLOGY_LINK = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-10m.json";
+const TOPOLOGY_LINK =
+  "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-10m.json";
 
 const CONFIRMED_CASES_LINK =
   "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv";
+
+let dateList = [];
+let allDates = [];
+let curDateIdx = 30;
+
 const numWithCommas = x => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
@@ -35,7 +41,72 @@ const tooltip = d3
   .attr("class", "tooltip")
   .style("opacity", 0);
 
+const getDataForDate = (data, date) =>
+  data
+    .filter(d => d[date] > 0)
+    .map(d => ({
+      lat: d.Lat,
+      long: d.Long,
+      country: d["Country/Region"],
+      count: d[date],
+      province: d["Province/State"]
+    }));
 
+const updateDateMap = data => {
+  allDates = Object.keys(data[0]).slice(4);
+  dateList = allDates.map(curDate => getDataForDate(data, curDate));
+};
+
+d3.select("#step").on("click", function(d, i) {
+  curDateIdx = (curDateIdx + 1) % dateList.length;
+  console.log(`Cur date idx now set to ${curDateIdx}`);
+
+  stepForward();
+});
+const stepForward = () => {
+  const updates = svg.selectAll("circle").data(dateList[curDateIdx]);
+
+  updates.enter().append("circle");
+  updates.exit().remove();
+  updates
+    .attr("r", function(d) {
+      const t = d3
+        .scaleSqrt()
+        .domain([MIN, MAX])
+        .range([0, 100]);
+      return t(d.count);
+      // return radius(d.properties.population); //radius const with input (domain) and output (range)
+    })
+    .attr("transform", function(d) {
+      return "translate(" + projection([d.long, d.lat]) + ")";
+    })
+    .attr("fill", d => {
+      return toColor(d.count);
+    })
+    //add Tool Tip
+    .on("mouseover", function(d) {
+      d3.select(this).classed("hover", true);
+      tooltip
+        .transition()
+        .duration(200)
+        .style("opacity", 0.9);
+      tooltip
+        .html(
+          `${d.province ? d.province + "<br/>" : ""}${
+            d.country
+          }<br/>Confirmed: ${numWithCommas(d.count)}`
+        )
+        .style("left", d3.event.pageX + "px")
+        .style("top", d3.event.pageY + "px");
+    })
+    .on("mouseout", function(d) {
+      d3.select(this).classed("hover", false);
+      tooltip
+        .transition()
+        .duration(500)
+        .style("opacity", 0);
+    });
+};
 d3.json(TOPOLOGY_LINK)
   .then(topology => {
     // Create the base map
@@ -49,58 +120,7 @@ d3.json(TOPOLOGY_LINK)
   })
   .then(() => d3.csv(CONFIRMED_CASES_LINK))
   .then(data => {
-    const filtered = data
-      .filter(d => d[CUR_DATE] > 0)
-      .map(d => ({
-        lat: d.Lat,
-        long: d.Long,
-        country: d["Country/Region"],
-        count: d[CUR_DATE],
-        province: d["Province/State"]
-      }));
-    console.log(filtered);
-    svg
-      .append("g")
-      .attr("class", "bubble")
-      .selectAll("circle")
-      .data(filtered)
-      .enter()
-      .append("circle")
-      .attr("r", function(d) {
-        const t = d3
-          .scaleSqrt()
-          .domain([MIN, MAX])
-          .range([0, 100]);
-        return t(d.count);
-        // return radius(d.properties.population); //radius const with input (domain) and output (range)
-      })
-      .attr("transform", function(d) {
-        return "translate(" + projection([d.long, d.lat]) + ")";
-      })
-      .attr("fill", d => {
-        return toColor(d.count);
-      })
-      //add Tool Tip
-      .on("mouseover", function(d) {
-        d3.select(this).classed("hover", true);
-        tooltip
-          .transition()
-          .duration(200)
-          .style("opacity", 0.9);
-        tooltip
-          .html(
-            `${d.province ? d.province + "<br/>" : ""}${
-              d.country
-            }<br/>Confirmed: ${numWithCommas(d.count)}`
-          )
-          .style("left", d3.event.pageX + "px")
-          .style("top", d3.event.pageY + "px");
-      })
-      .on("mouseout", function(d) {
-        d3.select(this).classed("hover", false);
-        tooltip
-          .transition()
-          .duration(500)
-          .style("opacity", 0);
-      });
+    updateDateMap(data);
+    svg.append("g").attr("class", "bubble");
+    stepForward();
   });
