@@ -57,18 +57,17 @@ const updateDateMap = data => {
   dateList = allDates.map(curDate => getDataForDate(data, curDate));
 };
 
-d3.select("#step").on("click", function(d, i) {
+const incrementDate = () => {
   curDateIdx = (curDateIdx + 1) % dateList.length;
   console.log(`Cur date idx now set to ${curDateIdx}`);
-
-  stepForward();
+}
+d3.select("#step").on("click", function(d, i) {
+  incrementDate();
+  renderForState();
 });
-const stepForward = () => {
-  const updates = svg.selectAll("circle").data(dateList[curDateIdx]);
 
-  updates.enter().append("circle");
-  updates.exit().remove();
-  updates
+const applyPropsToNodes = (nodes) => {
+  nodes
     .attr("r", function(d) {
       const t = d3
         .scaleSqrt()
@@ -85,6 +84,7 @@ const stepForward = () => {
     })
     //add Tool Tip
     .on("mouseover", function(d) {
+      console.log("Mouse over!")
       d3.select(this).classed("hover", true);
       tooltip
         .transition()
@@ -100,13 +100,34 @@ const stepForward = () => {
         .style("top", d3.event.pageY + "px");
     })
     .on("mouseout", function(d) {
+      console.log("Mouse exit")
       d3.select(this).classed("hover", false);
       tooltip
         .transition()
         .duration(500)
         .style("opacity", 0);
     });
+}
+
+const renderForState = () => {
+  const updates = svg.selectAll("circle").data(dateList[curDateIdx]);
+  updates.enter().append("circle").call(applyPropsToNodes);
+  updates.attr("r", function(d) {
+    const t = d3
+      .scaleSqrt()
+      .domain([MIN, MAX])
+      .range([0, 100]);
+    return t(d.count);
+    // return radius(d.properties.population); //radius const with input (domain) and output (range)
+  })    .attr("transform", function(d) {
+    return "translate(" + projection([d.long, d.lat]) + ")";
+  })    .attr("fill", d => {
+    return toColor(d.count);
+  });
+  updates.exit().remove();
+  console.log(updates)
 };
+
 d3.json(TOPOLOGY_LINK)
   .then(topology => {
     // Create the base map
@@ -122,5 +143,7 @@ d3.json(TOPOLOGY_LINK)
   .then(data => {
     updateDateMap(data);
     svg.append("g").attr("class", "bubble");
-    stepForward();
+
+    // setInterval(() => {incrementDate(); renderForState(); } ,500);
+    renderForState();
   });
