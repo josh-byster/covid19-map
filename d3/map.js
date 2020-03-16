@@ -26,8 +26,8 @@ const mod = (n, m) => {
 };
 
 const toColor = d3
-  .scaleSequentialSqrt(d3.interpolateYlOrRd)
-  .domain([SCALE_MIN, 35000]);
+  .scaleSqrt()
+  .domain([SCALE_MIN, SCALE_MAX/2]).range(["#f1c40f","#c0392b"])
 
 const toSize = d3
   .scaleSqrt()
