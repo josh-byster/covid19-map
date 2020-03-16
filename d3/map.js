@@ -117,19 +117,8 @@ d3.select("#animate").on("click", (d, i) => {
 
 const applyPropsToNodes = nodes => {
   nodes
-    .attr("r", function(d) {
-      const t = d3
-        .scaleSqrt()
-        .domain([SCALE_MIN, SCALE_MAX])
-        .range([0, BIGGEST_MARKER_PX]);
-      return t(d.count);
-      // return radius(d.properties.population); //radius const with input (domain) and output (range)
-    })
     .attr("transform", function(d) {
       return "translate(" + projection([d.long, d.lat]) + ")";
-    })
-    .attr("fill", d => {
-      return toColor(d.count);
     })
     //add Tool Tip
     .on("mouseover", function(d) {
@@ -171,8 +160,8 @@ const renderForState = () => {
   updates
     .enter()
     .append("circle")
-    .call(applyPropsToNodes);
-  updates
+    .call(applyPropsToNodes)
+    .merge(updates)
     .attr("r", function(d) {
       const t = d3
         .scaleSqrt()
