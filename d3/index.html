@@ -30,6 +30,11 @@
     border-radius: 8px;
     pointer-events: none;
   }
+
+  div.tooltip.active {
+    display: block; 
+  }
+
   circle {
     /* transition: fill-opacity 0.3s ease-in-out; */
     fill-opacity: 0.3;
@@ -60,6 +65,7 @@
   <div class="visual">
   <button id="step">Next</button>
   <button id="prev">Prev</button>
+  <button id="animate">Animation</button>
 </div>
   <script src="https://d3js.org/d3.v5.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">

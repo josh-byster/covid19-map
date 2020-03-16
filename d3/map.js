@@ -12,6 +12,7 @@ const CONFIRMED_CASES_LINK =
 let dateList = [];
 let allDates = [];
 let curDateIdx = 0;
+let animatingHandle = 0;
 
 const numWithCommas = x => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -20,7 +21,7 @@ const numWithCommas = x => {
 // Modulo operation since ex. (-1 % 50) = -1, but we want it to be 49 for the current date
 const mod = (n, m) => {
   return ((n % m) + m) % m;
-}
+};
 
 const toColor = d3
   .scaleSequentialSqrt(d3.interpolateYlOrRd)
@@ -33,34 +34,34 @@ const projection = d3
 
 const path = d3.geoPath(projection);
 
-
-
-const zoom = d3.zoom()
-.scaleExtent([1, 8])
-.on('zoom', zoomed);
+const zoom = d3
+  .zoom()
+  .scaleExtent([1, 8])
+  .on("zoom", zoomed);
 
 function zoomed() {
   g
     // .selectAll('path') // To prevent stroke width from scaling
-    .attr('transform', d3.event.transform);
+    .attr("transform", d3.event.transform);
 }
-
-
 
 const svg = d3
   .select(".visual")
   .append("svg")
   .attr("width", width)
   .attr("height", height)
-  .call(zoom)
-  
-const g = svg.append('g');
+  .call(zoom);
+
+const g = svg.append("g");
+
 // Define the div for the tooltip
 const tooltip = d3
   .select("body")
   .append("div")
   .attr("class", "tooltip")
-  .style("opacity", 0);
+  .style("opacity", 0)
+  // Prevent padding from taking up space at the bottom of the page at the beginning
+  .style("display", "none");
 
 const getDataForDate = (data, date) =>
   data
@@ -79,12 +80,12 @@ const updateDateMap = data => {
 };
 
 const incrementDate = () => {
-  curDateIdx = mod((curDateIdx + 1), dateList.length);
+  curDateIdx = mod(curDateIdx + 1, dateList.length);
   console.log(`Cur date idx now set to ${curDateIdx}`);
 };
 
 const decrementDate = () => {
-  curDateIdx = mod((curDateIdx - 1), dateList.length);
+  curDateIdx = mod(curDateIdx - 1, dateList.length);
   console.log(`Cur date idx now set to ${curDateIdx}`);
 };
 
@@ -96,6 +97,22 @@ d3.select("#step").on("click", function(d, i) {
 d3.select("#prev").on("click", function(d, i) {
   decrementDate();
   renderForState();
+});
+
+const toggleAnimation = () => {
+  if (animatingHandle) {
+    clearInterval(animatingHandle);
+    animatingHandle = 0;
+  } else {
+    animatingHandle = setInterval(() => {
+      incrementDate();
+      renderForState();
+    }, 100);
+  }
+};
+
+d3.select("#animate").on("click", (d, i) => {
+  toggleAnimation();
 });
 
 const applyPropsToNodes = nodes => {
@@ -128,6 +145,7 @@ const applyPropsToNodes = nodes => {
             d.country
           }<br/>Confirmed: ${numWithCommas(d.count)}`
         )
+        .style("display", "block")
         .style("left", d3.event.pageX + "px")
         .style("top", d3.event.pageY + "px");
     })
@@ -142,7 +160,9 @@ const applyPropsToNodes = nodes => {
 };
 
 const getNumInfectedCountries = data => {
-  return data.map(obj => obj.country).filter((val, i, arr) => arr.indexOf(val) === i);
+  return data
+    .map(obj => obj.country)
+    .filter((val, i, arr) => arr.indexOf(val) === i);
 };
 const renderForState = () => {
   const updates = g
@@ -170,16 +190,14 @@ const renderForState = () => {
   d3.select("#num-countries").html(`Number of countries affected: ${
     getNumInfectedCountries(dateList[curDateIdx]).length
   }
-    `
-  );
+    `);
 };
 
 d3.json(TOPOLOGY_LINK)
   .then(topology => {
     // Create the base map
     const geojson = topojson.feature(topology, topology.objects.countries);
-    g
-      .selectAll("path")
+    g.selectAll("path")
       .data(geojson.features)
       .enter()
       .append("path")
@@ -188,9 +206,5 @@ d3.json(TOPOLOGY_LINK)
   .then(() => d3.csv(CONFIRMED_CASES_LINK))
   .then(data => {
     updateDateMap(data);
-    // setInterval(() => {
-    //   incrementDate();
-    //   renderForState();
-    // }, 100);
     renderForState();
   });
