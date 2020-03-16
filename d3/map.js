@@ -1,6 +1,5 @@
 const width = 1000,
   height = 600;
-const CUR_DATE = "3/13/20";
 const SCALE_MIN = 0;
 const SCALE_MAX = 70000;
 const BIGGEST_MARKER_PX = 50;
@@ -17,6 +16,11 @@ let curDateIdx = 0;
 const numWithCommas = x => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
+
+// Modulo operation since ex. (-1 % 50) = -1, but we want it to be 49 for the current date
+const mod = (n, m) => {
+  return ((n % m) + m) % m;
+}
 
 const toColor = d3
   .scaleSequentialSqrt(d3.interpolateYlOrRd)
@@ -39,6 +43,7 @@ function zoomed() {
   g
     .selectAll('path') // To prevent stroke width from scaling
     .attr('transform', d3.event.transform);
+  renderForState();
 }
 
 
@@ -75,11 +80,22 @@ const updateDateMap = data => {
 };
 
 const incrementDate = () => {
-  curDateIdx = (curDateIdx + 1) % dateList.length;
+  curDateIdx = mod((curDateIdx + 1), dateList.length);
   console.log(`Cur date idx now set to ${curDateIdx}`);
 };
+
+const decrementDate = () => {
+  curDateIdx = mod((curDateIdx - 1), dateList.length);
+  console.log(`Cur date idx now set to ${curDateIdx}`);
+};
+
 d3.select("#step").on("click", function(d, i) {
   incrementDate();
+  renderForState();
+});
+
+d3.select("#prev").on("click", function(d, i) {
+  decrementDate();
   renderForState();
 });
 
@@ -175,9 +191,9 @@ d3.json(TOPOLOGY_LINK)
     updateDateMap(data);
     g.append("g").attr("class", "bubble");
 
-    setInterval(() => {
-      incrementDate();
-      renderForState();
-    }, 30);
+    // setInterval(() => {
+    //   incrementDate();
+    //   renderForState();
+    // }, 100);
     renderForState();
   });
