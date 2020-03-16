@@ -1,5 +1,5 @@
-const width = 1000,
-  height = 600;
+const width = window.innerWidth,
+  height = window.innerHeight;
 const SCALE_MIN = 0;
 const SCALE_MAX = 70000;
 const BIGGEST_MARKER_PX = 50;
@@ -25,6 +25,13 @@ const mod = (n, m) => {
   return ((n % m) + m) % m;
 };
 
+const resize = () => {
+  console.log(svg)
+  svg.attr("width",window.innerWidth)
+  svg.attr('height',window.innerHeight)
+}
+
+window.addEventListener("resize", resize);
 const toColor = d3
   .scaleSqrt()
   .domain([SCALE_MIN, SCALE_MAX/2]).range(["#f1c40f","#c0392b"])
@@ -42,7 +49,7 @@ const setScaling = (scale) => {
 
 const projection = d3
   .geoMercator()
-  .scale(150)
+  .scale(200)
   .translate([width / 2, (3 * height) / 4]);
 
 const path = d3.geoPath(projection);
