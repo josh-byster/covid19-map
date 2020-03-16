@@ -1,0 +1,77 @@
+body {
+  font-family: "Roboto", sans-serif;
+  margin: 0px;
+}
+.visual {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+path {
+  fill: #fff;
+  stroke: #fff;
+  stroke-width: 0.5px;
+}
+
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  /* width: 50px; */
+  /* height: 50px; */
+  padding: 10px;
+  font-size: 15px;
+  background: #2c3e50;
+  color: #ecf0f1;
+  pointer-events: none;
+}
+
+div.tooltip.active {
+  display: block;
+}
+
+circle {
+  transition: fill-opacity 0.4s ease-in-out;
+  fill-opacity: 0.6;
+  stroke: #fff;
+  stroke-width: 0.1px;
+}
+circle.hover {
+  fill-opacity: 0.9;
+  transition: fill-opacity 0.4s ease-in-out;
+}
+#title {
+  text-align: center;
+}
+#subtitle {
+  text-align: center;
+}
+#num-countries {
+  text-align: center;
+}
+.visual svg {
+  border: 1px solid black;
+  background-color: #3e4147;
+}
+
+#step {
+  position: fixed;
+  z-index: 1000;
+  bottom: 30px;
+  right: 60px;
+}
+#prev {
+  position: fixed;
+  bottom: 30px;
+  right: 100px;
+  z-index: 1000;
+}
+
+#animate {
+  position: fixed;
+  bottom: 30px;
+  right: 140px;
+  z-index: 1000;
+}

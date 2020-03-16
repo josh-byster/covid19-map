@@ -179,9 +179,9 @@ const getNumInfectedCountries = data => {
 };
 
 const getTooltipText = d =>
-  `${d.province ? d.province + "<br/>" : ""}${
+  `${d.province ? d.province + "<br/>" : ""}<b>${
     d.country
-  }<br/>Confirmed: ${numWithCommas(d.count)}`;
+  }</b><br/>Confirmed: ${numWithCommas(d.count)}`;
 
 const renderForState = () => {
   const currentData = dateToDataMap[curDateIdx];
