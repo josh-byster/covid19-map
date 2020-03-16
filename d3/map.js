@@ -3,6 +3,7 @@ const width = 1000,
 const SCALE_MIN = 0;
 const SCALE_MAX = 70000;
 const BIGGEST_MARKER_PX = 50;
+const FRAME_MS = 30;
 const TOPOLOGY_LINK =
   "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
@@ -26,6 +27,11 @@ const mod = (n, m) => {
 const toColor = d3
   .scaleSequentialSqrt(d3.interpolateYlOrRd)
   .domain([SCALE_MIN, 35000]);
+
+const toSize = d3
+  .scaleSqrt()
+  .domain([SCALE_MIN, SCALE_MAX])
+  .range([0, BIGGEST_MARKER_PX]);
 
 const projection = d3
   .geoMercator()
@@ -89,12 +95,12 @@ const decrementDate = () => {
   console.log(`Cur date idx now set to ${curDateIdx}`);
 };
 
-d3.select("#step").on("click", function(d, i) {
+d3.select("#step").on("click", (d, i) => {
   incrementDate();
   renderForState();
 });
 
-d3.select("#prev").on("click", function(d, i) {
+d3.select("#prev").on("click", (d, i) => {
   decrementDate();
   renderForState();
 });
@@ -107,7 +113,7 @@ const toggleAnimation = () => {
     animatingHandle = setInterval(() => {
       incrementDate();
       renderForState();
-    }, 100);
+    }, FRAME_MS);
   }
 };
 
@@ -117,7 +123,7 @@ d3.select("#animate").on("click", (d, i) => {
 
 const applyPropsToNodes = nodes => {
   nodes
-    .attr("transform", function(d) {
+    .attr("transform", d => {
       return "translate(" + projection([d.long, d.lat]) + ")";
     })
     //add Tool Tip
@@ -157,23 +163,17 @@ const renderForState = () => {
   const updates = g
     .selectAll("circle")
     .data(dateList[curDateIdx], d => `${d.lat}${d.long}`);
+
   updates
     .enter()
     .append("circle")
     .call(applyPropsToNodes)
     .merge(updates)
-    .attr("r", function(d) {
-      const t = d3
-        .scaleSqrt()
-        .domain([SCALE_MIN, SCALE_MAX])
-        .range([0, BIGGEST_MARKER_PX]);
-      return t(d.count);
-      // return radius(d.properties.population); //radius const with input (domain) and output (range)
-    })
-    .attr("fill", d => {
-      return toColor(d.count);
-    });
+    .attr("r", d => toSize(d.count))
+    .attr("fill", d => toColor(d.count));
+    
   updates.exit().remove();
+
   d3.select("#subtitle").html(allDates[curDateIdx]);
 
   d3.select("#num-countries").html(`Number of countries affected: ${
