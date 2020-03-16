@@ -14,7 +14,7 @@ let dateToDataMap = [];
 let allDates = [];
 let curDateIdx = 0;
 let animatingHandle = 0;
-let activeTip;
+let tooltipHoverId = -1;
 
 const numWithCommas = x => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -71,22 +71,21 @@ const tooltip = d3
   .style("display", "none");
 
 const getDataForDate = (data, date) =>
-  data
-    .filter(d => d[date] > 0)
-    .map(d => ({
-      id: d.id,
-      lat: d.Lat,
-      long: d.Long,
-      country: d["Country/Region"],
-      count: d[date],
-      province: d["Province/State"]
-    }));
+  data.map(d => ({
+    id: d.id,
+    lat: d.Lat,
+    long: d.Long,
+    country: d["Country/Region"],
+    count: d[date],
+    province: d["Province/State"]
+  }));
 
 const loadData = data => {
-  const dataWithIndices = data.map((row,idx) => ({id: idx,...row }));
+  const dataWithIndices = data.map((row, idx) => ({ id: idx, ...row }));
   allDates = Object.keys(dataWithIndices[0]).slice(5);
-  console.log(dataWithIndices)
-  dateToDataMap = allDates.map(curDate => getDataForDate(dataWithIndices, curDate));
+  dateToDataMap = allDates.map(curDate =>
+    getDataForDate(dataWithIndices, curDate)
+  );
 };
 
 const incrementDate = () => {
@@ -132,16 +131,15 @@ const applyPropsToNodes = nodes => {
     })
     //add Tool Tip
     .on("mouseover", function(d) {
+      tooltipHoverId = d.id;
       d3.select(this).classed("hover", true);
       tooltip
         .transition()
-        .duration(200)
+        .duration(500)
         .style("opacity", 0.9);
       tooltip
         .html(
-          `${d.province ? d.province + "<br/>" : ""}${
-            d.country
-          }<br/>Confirmed: ${numWithCommas(d.count)}`
+          getTooltipText(d)
         )
         .style("display", "block")
         .style("left", d3.event.pageX + "px")
@@ -152,20 +150,29 @@ const applyPropsToNodes = nodes => {
       d3.select(this).classed("hover", false);
       tooltip
         .transition()
-        .duration(500)
-        .style("opacity", 0);
+        .duration(1000)
+        .style("opacity", 0)
+        .on("end", () => {tooltipHoverId = -1});
     });
 };
 
 const getNumInfectedCountries = data => {
   return data
+    .filter(obj => +obj.count > 0)
     .map(obj => obj.country)
     .filter((val, i, arr) => arr.indexOf(val) === i);
 };
+
+const getTooltipText = d =>
+  `${d.province ? d.province + "<br/>" : ""}${
+    d.country
+  }<br/>Confirmed: ${numWithCommas(d.count)}`;
+
 const renderForState = () => {
+  const currentData = dateToDataMap[curDateIdx];
   const updates = g
     .selectAll("circle")
-    .data(dateToDataMap[curDateIdx], d => d.id);
+    .data(currentData, d => d.id);
   updates
     .enter()
     .append("circle")
@@ -173,13 +180,16 @@ const renderForState = () => {
     .merge(updates)
     .attr("r", d => toSize(d.count))
     .attr("fill", d => toColor(d.count));
-    
+
   updates.exit().remove();
 
+  if(tooltipHoverId !== -1){
+    tooltip.html(getTooltipText(currentData[tooltipHoverId]))
+  }
   d3.select("#subtitle").html(allDates[curDateIdx]);
 
   d3.select("#num-countries").html(`Number of countries affected: ${
-    getNumInfectedCountries(dateToDataMap[curDateIdx]).length
+    getNumInfectedCountries(currentData).length
   }
     `);
 };
