@@ -1,9 +1,10 @@
 var formatBottomDate = d3.timeFormat("%b %d");
-var formatDate = d3.timeFormat("%b %d %Y");
+var formatSliderDate = d3.timeFormat("%b %-d");
 var parseDate = d3.timeParse("%m/%d/%y");
 
-var startDate = new Date("2020-01-22"),
-  endDate = new Date("2020-03-16");
+console.log(allDates[0])
+var startDate = d3.timeParse("%Y-%m-%d")("2020-01-23"),
+  endDate = d3.timeParse("%Y-%m-%d")("2020-03-15");
 
 var margin = { top: 0, right: 50, bottom: 0, left: 50 },
   sliderWidth = 500 - margin.left - margin.right,
@@ -27,6 +28,7 @@ var x = d3
   .range([0, targetValue])
   .clamp(true);
 
+  console.log(x.domain())
 var slider = sliderSvg
   .append("g")
   .attr("class", "slider")
@@ -81,15 +83,15 @@ var label = slider
   .append("text")
   .attr("class", "label")
   .attr("text-anchor", "middle")
-  .text(formatDate(startDate))
+  .text(formatSliderDate(startDate))
   .attr("transform", "translate(0," + -25 + ")");
 
 function update(h) {
   // update position and text of label according to slider scale
   handle.attr("cx", x(h));
-  label.attr("x", x(h)).text(formatDate(h));
+  label.attr("x", x(h)).text(formatSliderDate(h));
   const curDate = d3.timeFormat("%-m/%-d/%y")(h);
-  curDateIdx = allDates.indexOf(curDate);
+  curDateIdx =  allDates.indexOf(curDate);
   renderForState()
 
 }

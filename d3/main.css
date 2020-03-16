@@ -26,6 +26,7 @@ div.tooltip {
   background: #2c3e50;
   color: #ecf0f1;
   pointer-events: none;
+  border-radius: 3px;
 }
 
 div.tooltip.active {
