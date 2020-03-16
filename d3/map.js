@@ -41,9 +41,8 @@ const zoom = d3.zoom()
 
 function zoomed() {
   g
-    .selectAll('path') // To prevent stroke width from scaling
+    // .selectAll('path') // To prevent stroke width from scaling
     .attr('transform', d3.event.transform);
-  renderForState();
 }
 
 
@@ -189,8 +188,6 @@ d3.json(TOPOLOGY_LINK)
   .then(() => d3.csv(CONFIRMED_CASES_LINK))
   .then(data => {
     updateDateMap(data);
-    g.append("g").attr("class", "bubble");
-
     // setInterval(() => {
     //   incrementDate();
     //   renderForState();
