@@ -43,7 +43,7 @@ const toSize = d3
 
 const setScaling = (scale) => {
   toSize
-    .domain([SCALE_MIN, SCALE_MAX / scale])
+    .domain([SCALE_MIN, SCALE_MAX / (scale * scale)])
     .range([0, BIGGEST_MARKER_PX / scale]);
 };
 
@@ -115,7 +115,7 @@ const decrementDate = () => {
 
 d3.select("#step").on("click", (d, i) => {
   incrementDate();
-  renderForState();
+  renderForState(true);
 });
 
 d3.select("#prev").on("click", (d, i) => {
@@ -158,6 +158,10 @@ const applyPropsToNodes = nodes => {
         .style("left", d3.event.pageX + "px")
         .style("top", d3.event.pageY + "px");
     })
+    .on("mousemove", function(d) {
+     tooltip.style("left", d3.event.pageX + 10 + "px")
+     .style("top", d3.event.pageY + 5 + "px"); 
+    })
     .on("mouseout", function(d) {
       console.log("Mouse exit");
       d3.select(this).classed("hover", false);
@@ -183,17 +187,24 @@ const getTooltipText = d =>
     d.country
   }</b><br/>Confirmed: ${numWithCommas(d.count)}`;
 
-const renderForState = () => {
+const renderForState = (animated) => {
   const currentData = dateToDataMap[curDateIdx];
   const updates = g.selectAll("circle").data(currentData, d => d.id);
+
   updates
     .enter()
     .append("circle")
     .call(applyPropsToNodes)
     .merge(updates)
-    .attr("r", d => toSize(d.count))
-    .attr("fill", d => toColor(d.count));
+    .style("fill", d => toColor(d.count));
 
+  if(animated){
+    console.log("Hi")
+    g.selectAll("circle").transition().attr("r", d => toSize(d.count))
+  } else {
+    console.log("Bye")
+    g.selectAll("circle").attr("r", d => toSize(d.count))
+  }
   updates.exit().remove();
 
   if (tooltipHoverId !== -1) {

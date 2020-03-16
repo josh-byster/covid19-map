@@ -12,8 +12,8 @@ body {
 }
 path {
   fill: #fff;
-  stroke: #fff;
-  stroke-width: 0.5px;
+  stroke: transparent;
+  stroke-width: 0.1px;
 }
 
 div.tooltip {
@@ -36,8 +36,8 @@ div.tooltip.active {
 circle {
   transition: fill-opacity 0.4s ease-in-out;
   fill-opacity: 0.6;
-  stroke: #fff;
-  stroke-width: 0.1px;
+  /* stroke: #fff; */
+  /* stroke-width: 0.1px; */
 }
 circle.hover {
   fill-opacity: 0.9;

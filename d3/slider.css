@@ -9,7 +9,7 @@ body {
     bottom: 0px;
     left: 0px;
     height:100px;
-    color: #fff;
+    fill: #fff;
 }
 #play-button {
   position: absolute;

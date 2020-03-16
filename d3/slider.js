@@ -91,7 +91,11 @@ function update(h) {
   handle.attr("cx", x(h));
   label.attr("x", x(h)).text(formatSliderDate(h));
   const curDate = d3.timeFormat("%-m/%-d/%y")(h);
-  curDateIdx =  allDates.indexOf(curDate);
-  renderForState()
+  if(curDateIdx !== allDates.indexOf(curDate)){
 
+ 
+    curDateIdx =  allDates.indexOf(curDate);
+    console.log(curDateIdx)
+    renderForState(true)
+}
 }
