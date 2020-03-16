@@ -10,10 +10,11 @@ const TOPOLOGY_LINK =
 const CONFIRMED_CASES_LINK =
   "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv";
 
-let dateList = [];
+let dateToDataMap = [];
 let allDates = [];
 let curDateIdx = 0;
 let animatingHandle = 0;
+let activeTip;
 
 const numWithCommas = x => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -73,6 +74,7 @@ const getDataForDate = (data, date) =>
   data
     .filter(d => d[date] > 0)
     .map(d => ({
+      id: d.id,
       lat: d.Lat,
       long: d.Long,
       country: d["Country/Region"],
@@ -80,18 +82,20 @@ const getDataForDate = (data, date) =>
       province: d["Province/State"]
     }));
 
-const updateDateMap = data => {
-  allDates = Object.keys(data[0]).slice(4);
-  dateList = allDates.map(curDate => getDataForDate(data, curDate));
+const loadData = data => {
+  const dataWithIndices = data.map((row,idx) => ({id: idx,...row }));
+  allDates = Object.keys(dataWithIndices[0]).slice(5);
+  console.log(dataWithIndices)
+  dateToDataMap = allDates.map(curDate => getDataForDate(dataWithIndices, curDate));
 };
 
 const incrementDate = () => {
-  curDateIdx = mod(curDateIdx + 1, dateList.length);
+  curDateIdx = mod(curDateIdx + 1, dateToDataMap.length);
   console.log(`Cur date idx now set to ${curDateIdx}`);
 };
 
 const decrementDate = () => {
-  curDateIdx = mod(curDateIdx - 1, dateList.length);
+  curDateIdx = mod(curDateIdx - 1, dateToDataMap.length);
   console.log(`Cur date idx now set to ${curDateIdx}`);
 };
 
@@ -128,7 +132,6 @@ const applyPropsToNodes = nodes => {
     })
     //add Tool Tip
     .on("mouseover", function(d) {
-      console.log("Mouse over!");
       d3.select(this).classed("hover", true);
       tooltip
         .transition()
@@ -162,8 +165,7 @@ const getNumInfectedCountries = data => {
 const renderForState = () => {
   const updates = g
     .selectAll("circle")
-    .data(dateList[curDateIdx], d => `${d.lat}${d.long}`);
-
+    .data(dateToDataMap[curDateIdx], d => d.id);
   updates
     .enter()
     .append("circle")
@@ -177,7 +179,7 @@ const renderForState = () => {
   d3.select("#subtitle").html(allDates[curDateIdx]);
 
   d3.select("#num-countries").html(`Number of countries affected: ${
-    getNumInfectedCountries(dateList[curDateIdx]).length
+    getNumInfectedCountries(dateToDataMap[curDateIdx]).length
   }
     `);
 };
@@ -194,6 +196,6 @@ d3.json(TOPOLOGY_LINK)
   })
   .then(() => d3.csv(CONFIRMED_CASES_LINK))
   .then(data => {
-    updateDateMap(data);
+    loadData(data);
     renderForState();
   });
