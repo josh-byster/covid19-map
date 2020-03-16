@@ -34,6 +34,12 @@ const toSize = d3
   .domain([SCALE_MIN, SCALE_MAX])
   .range([0, BIGGEST_MARKER_PX]);
 
+const setScaling = (scale) => {
+  toSize
+    .domain([SCALE_MIN, SCALE_MAX / scale])
+    .range([0, BIGGEST_MARKER_PX / scale]);
+};
+
 const projection = d3
   .geoMercator()
   .scale(150)
@@ -50,6 +56,8 @@ function zoomed() {
   g
     // .selectAll('path') // To prevent stroke width from scaling
     .attr("transform", d3.event.transform);
+  setScaling(d3.event.transform.k);
+  g.selectAll("circle").attr("r", d => toSize(d.count));
 }
 
 const svg = d3
@@ -138,9 +146,7 @@ const applyPropsToNodes = nodes => {
         .duration(500)
         .style("opacity", 0.9);
       tooltip
-        .html(
-          getTooltipText(d)
-        )
+        .html(getTooltipText(d))
         .style("display", "block")
         .style("left", d3.event.pageX + "px")
         .style("top", d3.event.pageY + "px");
@@ -152,7 +158,9 @@ const applyPropsToNodes = nodes => {
         .transition()
         .duration(1000)
         .style("opacity", 0)
-        .on("end", () => {tooltipHoverId = -1});
+        .on("end", () => {
+          tooltipHoverId = -1;
+        });
     });
 };
 
@@ -170,9 +178,7 @@ const getTooltipText = d =>
 
 const renderForState = () => {
   const currentData = dateToDataMap[curDateIdx];
-  const updates = g
-    .selectAll("circle")
-    .data(currentData, d => d.id);
+  const updates = g.selectAll("circle").data(currentData, d => d.id);
   updates
     .enter()
     .append("circle")
@@ -183,8 +189,8 @@ const renderForState = () => {
 
   updates.exit().remove();
 
-  if(tooltipHoverId !== -1){
-    tooltip.html(getTooltipText(currentData[tooltipHoverId]))
+  if (tooltipHoverId !== -1) {
+    tooltip.html(getTooltipText(currentData[tooltipHoverId]));
   }
   d3.select("#subtitle").html(allDates[curDateIdx]);
 
