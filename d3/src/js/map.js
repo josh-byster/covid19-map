@@ -20,7 +20,11 @@ class Map {
   curDateIdx = 0;
   animatingHandle = 0;
   tooltipHoverId = -1;
+  slider;
 
+  setSlider(slider) {
+    this.slider = slider;
+  }
   constructor() {
     console.log("Being constructed");
     window.addEventListener("resize", this.resize);
@@ -105,15 +109,14 @@ class Map {
   zoom = d3
     .zoom()
     .scaleExtent([1, 8])
-    .on("zoom", this.zoomed);
+    .on("zoom", this.zoomed.bind(this));
 
   zoomed() {
-    console.log(d3.event.transform);
     this.g
       // .selectAll('path') // To prevent stroke width from scaling
       .attr("transform", d3.event.transform);
-    setScaling(d3.event.transform.k);
-    this.g.selectAll("circle").attr("r", d => toSize(d.confirmed));
+    this.setScaling(d3.event.transform.k);
+    this.g.selectAll("circle").attr("r", d => this.toSize(d.confirmed));
   }
 
   svg = d3
@@ -177,45 +180,46 @@ class Map {
         this.incrementDate();
         this.renderForState();
         // Update slider
-        update(parseDate(allDates[curDateIdx]));
+        this.slider.update(this.slider.parseDate(this.allDates[this.curDateIdx]));
       }, this.FRAME_MS);
       d3.select("#animate").html("Stop");
     }
   };
 
   applyPropsToNodes = nodes => {
+    const self = this;
     nodes
       .attr("transform", d => {
         return "translate(" + this.projection([d.long, d.lat]) + ")";
       })
       //add Tool Tip
       .on("mouseover", function(d) {
-        this.tooltipHoverId = d.id;
+        self.tooltipHoverId = d.id;
         d3.select(this).classed("hover", true);
-        this.tooltip
+        self.tooltip
           .transition()
           .duration(500)
           .style("opacity", 0.9);
-        this.tooltip
-          .html(getTooltipText(d))
+        self.tooltip
+          .html(self.getTooltipText(d))
           .style("display", "block")
           .style("left", d3.event.pageX + "px")
           .style("top", d3.event.pageY + "px");
       })
       .on("mousemove", function(d) {
-        tooltip
+        self.tooltip
           .style("left", d3.event.pageX + 10 + "px")
           .style("top", d3.event.pageY + 5 + "px");
       })
       .on("mouseout", function(d) {
         console.log("Mouse exit");
         d3.select(this).classed("hover", false);
-        this.tooltip
+        self.tooltip
           .transition()
           .duration(1000)
           .style("opacity", 0)
           .on("end", () => {
-            this.tooltipHoverId = -1;
+            self.tooltipHoverId = -1;
           });
       });
   };
@@ -230,9 +234,9 @@ class Map {
   getTooltipText = d =>
     `${d.province ? d.province + "<br/>" : ""}<b>${
       d.country
-    }</b><br/>Confirmed: ${numWithCommas(
+    }</b><br/>Confirmed: ${this.numWithCommas(
       d.confirmed
-    )}<br/>Deaths: ${numWithCommas(d.deaths)}`;
+    )}<br/>Deaths: ${this.numWithCommas(d.deaths)}`;
 
   renderForState = animated => {
     const currentData = this.dateToDataMap[this.curDateIdx];
@@ -246,8 +250,8 @@ class Map {
       .style("fill", d => this.toColor(d.confirmed));
 
     if (animated) {
-      console.log("Hi");
-      g.selectAll("circle")
+      this.g
+        .selectAll("circle")
         .transition()
         .attr("r", d => this.toSize(d.confirmed));
     } else {
@@ -257,7 +261,8 @@ class Map {
     updates.exit().remove();
 
     if (this.tooltipHoverId !== -1) {
-      this.tooltip.html(getTooltipText(currentData[tooltipHoverId]));
+      console.log("hello!")
+      this.tooltip.html(this.getTooltipText(currentData[this.tooltipHoverId]));
     }
     d3.select("#subtitle").html(this.allDates[this.curDateIdx]);
 

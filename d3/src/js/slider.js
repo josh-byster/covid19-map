@@ -19,7 +19,7 @@ class Slider {
   moving = false;
   currentValue = 0;
   targetValue = this.sliderWidth;
-
+  map;
   playButton = d3.select("#play-button");
 
   x = d3
@@ -33,7 +33,9 @@ class Slider {
     .attr("class", "slider")
     .attr("transform", "translate(" + this.margin.left + "," + 0 / 5 + ")");
 
-  constructor() {
+  constructor(map) {
+    this.map = map;
+    const self = this;
     this.slider
       .append("line")
       .attr("class", "track")
@@ -51,11 +53,11 @@ class Slider {
         d3
           .drag()
           .on("start.interrupt", function() {
-            slider.interrupt();
+            self.slider.interrupt();
           })
           .on("start drag", function() {
-            currentValue = d3.event.x;
-            update(x.invert(currentValue));
+            self.currentValue = d3.event.x;
+            self.update(self.x.invert(self.currentValue));
           })
       );
 
@@ -70,7 +72,7 @@ class Slider {
       .attr("x", this.x)
       .attr("y", 10)
       .attr("text-anchor", "middle")
-      .text((d) => {
+      .text(d => {
         return this.formatBottomDate(d);
       });
   }
@@ -89,13 +91,12 @@ class Slider {
 
   update(h) {
     // update position and text of label according to slider scale
-    handle.attr("cx", this.x(h));
-    label.attr("x", this.x(h)).text(formatSliderDate(h));
+    this.handle.attr("cx", this.x(h));
+    this.label.attr("x", this.x(h)).text(this.formatSliderDate(h));
     const curDate = d3.timeFormat("%-m/%-d/%y")(h);
-    if (curDateIdx !== allDates.indexOf(curDate)) {
-      curDateIdx = allDates.indexOf(curDate);
-      console.log(curDateIdx);
-      renderForState(true);
+    if (this.map.curDateIdx !== this.map.allDates.indexOf(curDate)) {
+      this.map.curDateIdx = this.map.allDates.indexOf(curDate);
+      this.map.renderForState(true);
     }
   }
 }
