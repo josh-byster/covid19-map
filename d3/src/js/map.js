@@ -21,39 +21,43 @@ class Map {
   animatingHandle = 0;
   tooltipHoverId = -1;
 
-  constuctor() {
-    console.log("Being constructed")
-    window.addEventListener("resize", resize);
+  constructor() {
+    console.log("Being constructed");
+    window.addEventListener("resize", this.resize);
     d3.select("#step").on("click", (d, i) => {
-      incrementDate();
-      renderForState(true);
+      this.incrementDate();
+      this.renderForState(true);
     });
 
     d3.select("#prev").on("click", (d, i) => {
-      decrementDate();
-      renderForState();
+      this.decrementDate();
+      this.renderForState();
     });
 
     d3.select("#animate").on("click", (d, i) => {
-      toggleAnimation();
+      this.toggleAnimation();
     });
 
-    d3.json(TOPOLOGY_LINK)
+    d3.json(this.TOPOLOGY_LINK)
       .then(topology => {
         // Create the base map
-        geojson = topojson.feature(topology, topology.objects.countries);
-        g.selectAll("path")
+        const geojson = topojson.feature(topology, topology.objects.countries);
+        this.g
+          .selectAll("path")
           .data(geojson.features)
           .enter()
           .append("path")
-          .attr("d", path);
+          .attr("d", this.path);
       })
       .then(() =>
-        Promise.all([d3.csv(CONFIRMED_CASES_LINK), d3.csv(DEATH_CASES_LINK)])
+        Promise.all([
+          d3.csv(this.CONFIRMED_CASES_LINK),
+          d3.csv(this.DEATH_CASES_LINK)
+        ])
       )
       .then(data => {
-        loadData(...data);
-        renderForState();
+        this.loadData(...data);
+        this.renderForState();
       });
   }
 
@@ -83,14 +87,12 @@ class Map {
     .range([this.SMALLEST_MARKER_PX, this.BIGGEST_MARKER_PX]);
   // .clamp(true)
 
-  toSize = x => (x == 0 ? 0 : sizeFunction(x));
+  toSize = x => (x == 0 ? 0 : this.sizeFunction(x));
 
   setScaling = scale => {
-    sizeFunction
+    this.sizeFunction
       .domain([this.SCALE_MIN, this.SCALE_MAX / (scale * scale)])
       .range([this.SMALLEST_MARKER_PX, this.BIGGEST_MARKER_PX / scale]);
-    console.log(sizeFunction.domain());
-    console.log(sizeFunction.range());
   };
 
   projection = d3
@@ -107,11 +109,11 @@ class Map {
 
   zoomed() {
     console.log(d3.event.transform);
-    g
+    this.g
       // .selectAll('path') // To prevent stroke width from scaling
       .attr("transform", d3.event.transform);
     setScaling(d3.event.transform.k);
-    g.selectAll("circle").attr("r", d => toSize(d.confirmed));
+    this.g.selectAll("circle").attr("r", d => toSize(d.confirmed));
   }
 
   svg = d3
@@ -147,36 +149,36 @@ class Map {
 
   addIndicesToData = d => d.map((row, idx) => ({ id: idx, ...row }));
   loadData = (confirmed, deaths) => {
-    confirmedWithIndices = addIndicesToData(confirmed);
-    deathsWithIndices = addIndicesToData(deaths);
-    allDates = Object.keys(confirmedWithIndices[0]).slice(5);
-    dateToDataMap = allDates.map(curDate =>
-      getDataForDate(confirmedWithIndices, deathsWithIndices, curDate)
+    const confirmedWithIndices = this.addIndicesToData(confirmed);
+    const deathsWithIndices = this.addIndicesToData(deaths);
+    this.allDates = Object.keys(confirmedWithIndices[0]).slice(5);
+    this.dateToDataMap = this.allDates.map(curDate =>
+      this.getDataForDate(confirmedWithIndices, deathsWithIndices, curDate)
     );
   };
 
   incrementDate = () => {
-    curDateIdx = mod(curDateIdx + 1, dateToDataMap.length);
-    console.log(`Cur date idx now set to ${curDateIdx}`);
+    this.curDateIdx = this.mod(this.curDateIdx + 1, this.dateToDataMap.length);
+    console.log(`Cur date idx now set to ${this.curDateIdx}`);
   };
 
   decrementDate = () => {
-    curDateIdx = mod(curDateIdx - 1, dateToDataMap.length);
-    console.log(`Cur date idx now set to ${curDateIdx}`);
+    this.curDateIdx = this.mod(this.curDateIdx - 1, this.dateToDataMap.length);
+    console.log(`Cur date idx now set to ${this.curDateIdx}`);
   };
 
   toggleAnimation = () => {
-    if (animatingHandle) {
-      clearInterval(animatingHandle);
-      animatingHandle = 0;
+    if (this.animatingHandle) {
+      clearInterval(this.animatingHandle);
+      this.animatingHandle = 0;
       d3.select("#animate").html("Animate");
     } else {
-      animatingHandle = setInterval(() => {
-        incrementDate();
-        renderForState();
+      this.animatingHandle = setInterval(() => {
+        this.incrementDate();
+        this.renderForState();
         // Update slider
         update(parseDate(allDates[curDateIdx]));
-      }, FRAME_MS);
+      }, this.FRAME_MS);
       d3.select("#animate").html("Stop");
     }
   };
@@ -184,17 +186,17 @@ class Map {
   applyPropsToNodes = nodes => {
     nodes
       .attr("transform", d => {
-        return "translate(" + projection([d.long, d.lat]) + ")";
+        return "translate(" + this.projection([d.long, d.lat]) + ")";
       })
       //add Tool Tip
       .on("mouseover", function(d) {
-        tooltipHoverId = d.id;
+        this.tooltipHoverId = d.id;
         d3.select(this).classed("hover", true);
-        tooltip
+        this.tooltip
           .transition()
           .duration(500)
           .style("opacity", 0.9);
-        tooltip
+        this.tooltip
           .html(getTooltipText(d))
           .style("display", "block")
           .style("left", d3.event.pageX + "px")
@@ -208,12 +210,12 @@ class Map {
       .on("mouseout", function(d) {
         console.log("Mouse exit");
         d3.select(this).classed("hover", false);
-        tooltip
+        this.tooltip
           .transition()
           .duration(1000)
           .style("opacity", 0)
           .on("end", () => {
-            tooltipHoverId = -1;
+            this.tooltipHoverId = -1;
           });
       });
   };
@@ -233,34 +235,34 @@ class Map {
     )}<br/>Deaths: ${numWithCommas(d.deaths)}`;
 
   renderForState = animated => {
-    currentData = dateToDataMap[curDateIdx];
-    updates = g.selectAll("circle").data(currentData, d => d.id);
+    const currentData = this.dateToDataMap[this.curDateIdx];
+    const updates = this.g.selectAll("circle").data(currentData, d => d.id);
 
     updates
       .enter()
       .append("circle")
-      .call(applyPropsToNodes)
+      .call(this.applyPropsToNodes)
       .merge(updates)
-      .style("fill", d => toColor(d.confirmed));
+      .style("fill", d => this.toColor(d.confirmed));
 
     if (animated) {
       console.log("Hi");
       g.selectAll("circle")
         .transition()
-        .attr("r", d => toSize(d.confirmed));
+        .attr("r", d => this.toSize(d.confirmed));
     } else {
       console.log("Bye");
-      g.selectAll("circle").attr("r", d => toSize(d.confirmed));
+      this.g.selectAll("circle").attr("r", d => this.toSize(d.confirmed));
     }
     updates.exit().remove();
 
-    if (tooltipHoverId !== -1) {
-      tooltip.html(getTooltipText(currentData[tooltipHoverId]));
+    if (this.tooltipHoverId !== -1) {
+      this.tooltip.html(getTooltipText(currentData[tooltipHoverId]));
     }
-    d3.select("#subtitle").html(allDates[curDateIdx]);
+    d3.select("#subtitle").html(this.allDates[this.curDateIdx]);
 
     d3.select("#num-countries").html(`Number of countries affected: ${
-      getNumInfectedCountries(currentData).length
+      this.getNumInfectedCountries(currentData).length
     }
     `);
   };
