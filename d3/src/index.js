@@ -5,6 +5,9 @@ import WebpackLogo from './images/webpack-logo.svg'
 import './styles/main.css'
 import './styles/slider.css'
 
+
+const t = new Map();
+const s = new Slider();
 // // Create SVG logo node
 // const logo = document.createElement('img')
 // logo.src = WebpackLogo
