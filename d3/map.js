@@ -4,7 +4,7 @@ const SCALE_MIN = 1;
 const SCALE_MAX = 70000;
 const SMALLEST_MARKER_PX = 1;
 const BIGGEST_MARKER_PX = 60;
-const FRAME_MS = 30;
+const FRAME_MS = 150;
 const TOPOLOGY_LINK =
   "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
@@ -141,11 +141,15 @@ const toggleAnimation = () => {
   if (animatingHandle) {
     clearInterval(animatingHandle);
     animatingHandle = 0;
+    d3.select("#animate").html("Animate");
   } else {
     animatingHandle = setInterval(() => {
       incrementDate();
       renderForState();
+      // Update slider
+      update(parseDate(allDates[curDateIdx]))
     }, FRAME_MS);
+    d3.select("#animate").html("Stop");
   }
 };
 
