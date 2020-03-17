@@ -1,5 +1,5 @@
 const width = window.innerWidth,
-  height = window.innerHeight-100;
+  height = window.innerHeight - 100;
 const SCALE_MIN = 1;
 const SCALE_MAX = 70000;
 const SMALLEST_MARKER_PX = 1;
@@ -10,6 +10,9 @@ const TOPOLOGY_LINK =
 
 const CONFIRMED_CASES_LINK =
   "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv";
+
+const DEATH_CASES_LINK =
+  "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv";
 
 let dateToDataMap = [];
 let allDates = [];
@@ -27,30 +30,31 @@ const mod = (n, m) => {
 };
 
 const resize = () => {
-  console.log(svg)
-  svg.attr("width",window.innerWidth)
-  svg.attr('height',window.innerHeight-100)
-}
+  console.log(svg);
+  svg.attr("width", window.innerWidth);
+  svg.attr("height", window.innerHeight - 100);
+};
 
 window.addEventListener("resize", resize);
 const toColor = d3
   .scaleSqrt()
-  .domain([SCALE_MIN, SCALE_MAX/2]).range(["#f1c40f","#c0392b"])
+  .domain([SCALE_MIN, SCALE_MAX / 2])
+  .range(["#f1c40f", "#c0392b"]);
 
 const sizeFunction = d3
-.scaleSqrt()
-.domain([SCALE_MIN, SCALE_MAX])
-.range([SMALLEST_MARKER_PX, BIGGEST_MARKER_PX])
+  .scaleSqrt()
+  .domain([SCALE_MIN, SCALE_MAX])
+  .range([SMALLEST_MARKER_PX, BIGGEST_MARKER_PX]);
 // .clamp(true)
 
-const toSize = x => x == 0 ? 0 : sizeFunction(x);
+const toSize = x => (x == 0 ? 0 : sizeFunction(x));
 
-const setScaling = (scale) => {
+const setScaling = scale => {
   sizeFunction
     .domain([SCALE_MIN, SCALE_MAX / (scale * scale)])
-    .range([SMALLEST_MARKER_PX, BIGGEST_MARKER_PX / (scale)]);
-  console.log(sizeFunction.domain())
-  console.log(sizeFunction.range())
+    .range([SMALLEST_MARKER_PX, BIGGEST_MARKER_PX / scale]);
+  console.log(sizeFunction.domain());
+  console.log(sizeFunction.range());
 };
 
 const projection = d3
@@ -66,12 +70,12 @@ const zoom = d3
   .on("zoom", zoomed);
 
 function zoomed() {
-  console.log(d3.event.transform)
+  console.log(d3.event.transform);
   g
     // .selectAll('path') // To prevent stroke width from scaling
     .attr("transform", d3.event.transform);
   setScaling(d3.event.transform.k);
-  g.selectAll("circle").attr("r", d => toSize(d.count));
+  g.selectAll("circle").attr("r", d => toSize(d.confirmed));
 }
 
 const svg = d3
@@ -92,21 +96,24 @@ const tooltip = d3
   // Prevent padding from taking up space at the bottom of the page at the beginning
   .style("display", "none");
 
-const getDataForDate = (data, date) =>
-  data.map(d => ({
+const getDataForDate = (confirmed, deaths, date) =>
+  confirmed.map((d,idx) => ({
     id: d.id,
     lat: d.Lat,
     long: d.Long,
     country: d["Country/Region"],
-    count: d[date],
-    province: d["Province/State"]
+    confirmed: d[date],
+    province: d["Province/State"],
+    deaths: deaths[idx][date]
   }));
 
-const loadData = data => {
-  const dataWithIndices = data.map((row, idx) => ({ id: idx, ...row }));
-  allDates = Object.keys(dataWithIndices[0]).slice(5);
+const addIndicesToData = d => d.map((row, idx) => ({ id: idx, ...row }));
+const loadData = (confirmed, deaths) => {
+  const confirmedWithIndices = addIndicesToData(confirmed)
+  const deathsWithIndices = addIndicesToData(deaths);
+  allDates = Object.keys(confirmedWithIndices[0]).slice(5);
   dateToDataMap = allDates.map(curDate =>
-    getDataForDate(dataWithIndices, curDate)
+    getDataForDate(confirmedWithIndices,deathsWithIndices, curDate)
   );
 };
 
@@ -166,8 +173,9 @@ const applyPropsToNodes = nodes => {
         .style("top", d3.event.pageY + "px");
     })
     .on("mousemove", function(d) {
-     tooltip.style("left", d3.event.pageX + 10 + "px")
-     .style("top", d3.event.pageY + 5 + "px"); 
+      tooltip
+        .style("left", d3.event.pageX + 10 + "px")
+        .style("top", d3.event.pageY + 5 + "px");
     })
     .on("mouseout", function(d) {
       console.log("Mouse exit");
@@ -184,7 +192,7 @@ const applyPropsToNodes = nodes => {
 
 const getNumInfectedCountries = data => {
   return data
-    .filter(obj => +obj.count > 0)
+    .filter(obj => +obj.confirmed > 0)
     .map(obj => obj.country)
     .filter((val, i, arr) => arr.indexOf(val) === i);
 };
@@ -192,9 +200,9 @@ const getNumInfectedCountries = data => {
 const getTooltipText = d =>
   `${d.province ? d.province + "<br/>" : ""}<b>${
     d.country
-  }</b><br/>Confirmed: ${numWithCommas(d.count)}`;
+  }</b><br/>Confirmed: ${numWithCommas(d.confirmed)}<br/>Deaths: ${numWithCommas(d.deaths)}`;
 
-const renderForState = (animated) => {
+const renderForState = animated => {
   const currentData = dateToDataMap[curDateIdx];
   const updates = g.selectAll("circle").data(currentData, d => d.id);
 
@@ -203,14 +211,16 @@ const renderForState = (animated) => {
     .append("circle")
     .call(applyPropsToNodes)
     .merge(updates)
-    .style("fill", d => toColor(d.count));
+    .style("fill", d => toColor(d.confirmed));
 
-  if(animated){
-    console.log("Hi")
-    g.selectAll("circle").transition().attr("r", d => toSize(d.count))
+  if (animated) {
+    console.log("Hi");
+    g.selectAll("circle")
+      .transition()
+      .attr("r", d => toSize(d.confirmed));
   } else {
-    console.log("Bye")
-    g.selectAll("circle").attr("r", d => toSize(d.count))
+    console.log("Bye");
+    g.selectAll("circle").attr("r", d => toSize(d.confirmed));
   }
   updates.exit().remove();
 
@@ -235,8 +245,10 @@ d3.json(TOPOLOGY_LINK)
       .append("path")
       .attr("d", path);
   })
-  .then(() => d3.csv(CONFIRMED_CASES_LINK))
-  .then(data => {
-    loadData(data);
+  .then(() =>
+    Promise.all([d3.csv(CONFIRMED_CASES_LINK), d3.csv(DEATH_CASES_LINK)])
+  )
+  .then((data) => {
+    loadData(...data);
     renderForState();
   });
