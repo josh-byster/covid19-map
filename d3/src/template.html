@@ -1,23 +1,19 @@
 <!DOCTYPE html>
-<meta charset="utf-8" />
+<html lang="en">
+
 <head>
-  <link
-href="./main.css"
-rel="stylesheet"
-/>
-  <link
-  href="./slider.css"
-  rel="stylesheet"
-/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title><%= htmlWebpackPlugin.options.title %></title>
 
 </head>
-<style>
 
-</style>
 <body>
-  <!-- <h1 id="title">Confirmed Number of COVID-19 Cases</h1>
-  <h2 id="subtitle"></h2>
-  <h2 id="num-countries"></h2> -->
+
+  <div id="root"></div>
+
   <div id="vis"><button id="animate">Animate</button></div>
   <div class="visual"><div id="map-shadow"></div>
   <script src="https://d3js.org/d3.v5.js"></script>
@@ -26,6 +22,6 @@ rel="stylesheet"
     rel="stylesheet"
   />
   <script src="https://unpkg.com/topojson@3"></script>
-  <script src="./map.js"></script>
-  <script src="./slider.js"></script>
 </body>
+
+</html>
