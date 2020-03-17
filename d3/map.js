@@ -2,7 +2,7 @@ const width = window.innerWidth,
   height = window.innerHeight;
 const SCALE_MIN = 0;
 const SCALE_MAX = 70000;
-const BIGGEST_MARKER_PX = 50;
+const BIGGEST_MARKER_PX = 60;
 const FRAME_MS = 30;
 const TOPOLOGY_LINK =
   "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
@@ -44,7 +44,7 @@ const toSize = d3
 const setScaling = (scale) => {
   toSize
     .domain([SCALE_MIN, SCALE_MAX / (scale * scale)])
-    .range([0, BIGGEST_MARKER_PX / scale]);
+    .range([0, BIGGEST_MARKER_PX / (2*scale -1)]);
 };
 
 const projection = d3
@@ -60,6 +60,7 @@ const zoom = d3
   .on("zoom", zoomed);
 
 function zoomed() {
+  console.log(d3.event.transform)
   g
     // .selectAll('path') // To prevent stroke width from scaling
     .attr("transform", d3.event.transform);

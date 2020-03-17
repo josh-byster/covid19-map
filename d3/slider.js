@@ -2,9 +2,8 @@ var formatBottomDate = d3.timeFormat("%b %d");
 var formatSliderDate = d3.timeFormat("%b %-d");
 var parseDate = d3.timeParse("%m/%d/%y");
 
-console.log(allDates[0])
 var startDate = d3.timeParse("%Y-%m-%d")("2020-01-23"),
-  endDate = d3.timeParse("%Y-%m-%d")("2020-03-15");
+  endDate = d3.timeParse("%Y-%m-%d")("2020-03-16");
 
 var margin = { top: 0, right: 50, bottom: 0, left: 50 },
   sliderWidth = 500 - margin.left - margin.right,
