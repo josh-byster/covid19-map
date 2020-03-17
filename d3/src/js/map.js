@@ -26,7 +26,6 @@ class Map {
     this.slider = slider;
   }
   constructor() {
-    console.log("Being constructed");
     window.addEventListener("resize", this.resize);
     d3.select("#step").on("click", (d, i) => {
       this.incrementDate();
@@ -75,7 +74,6 @@ class Map {
   };
 
   resize = () => {
-    console.log(this.svg);
     this.svg.attr("width", window.innerWidth);
     this.svg.attr("height", window.innerHeight - 100);
   };
@@ -162,12 +160,10 @@ class Map {
 
   incrementDate = () => {
     this.curDateIdx = this.mod(this.curDateIdx + 1, this.dateToDataMap.length);
-    console.log(`Cur date idx now set to ${this.curDateIdx}`);
   };
 
   decrementDate = () => {
     this.curDateIdx = this.mod(this.curDateIdx - 1, this.dateToDataMap.length);
-    console.log(`Cur date idx now set to ${this.curDateIdx}`);
   };
 
   toggleAnimation = () => {
@@ -212,7 +208,6 @@ class Map {
           .style("top", d3.event.pageY + 5 + "px");
       })
       .on("mouseout", function(d) {
-        console.log("Mouse exit");
         d3.select(this).classed("hover", false);
         self.tooltip
           .transition()
@@ -255,13 +250,11 @@ class Map {
         .transition()
         .attr("r", d => this.toSize(d.confirmed));
     } else {
-      console.log("Bye");
       this.g.selectAll("circle").attr("r", d => this.toSize(d.confirmed));
     }
     updates.exit().remove();
 
     if (this.tooltipHoverId !== -1) {
-      console.log("hello!")
       this.tooltip.html(this.getTooltipText(currentData[this.tooltipHoverId]));
     }
     d3.select("#subtitle").html(this.allDates[this.curDateIdx]);
