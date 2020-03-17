@@ -1,3 +1,5 @@
+const d3 = require("d3");
+const topojson = require("topojson");
 class Map {
   width = window.innerWidth;
   height = window.innerHeight - 100;

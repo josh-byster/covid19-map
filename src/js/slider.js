@@ -1,3 +1,4 @@
+const d3 = require("d3");
 class Slider {
   formatBottomDate = d3.timeFormat("%b %-d");
   formatSliderDate = d3.timeFormat("%b %-d");
