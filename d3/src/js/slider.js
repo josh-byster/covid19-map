@@ -75,19 +75,19 @@ class Slider {
       .text(d => {
         return this.formatBottomDate(d);
       });
+    this.handle = this.slider
+      .insert("circle", ".track-overlay")
+      .attr("class", "handle")
+      .attr("r", 15)
+      .call(x => {});
+
+    this.label = this.slider
+      .append("text")
+      .attr("class", "label")
+      .attr("text-anchor", "middle")
+      .text(this.formatSliderDate(this.startDate))
+      .attr("transform", "translate(0," + -25 + ")");
   }
-
-  handle = this.slider
-    .insert("circle", ".track-overlay")
-    .attr("class", "handle")
-    .attr("r", 15);
-
-  label = this.slider
-    .append("text")
-    .attr("class", "label")
-    .attr("text-anchor", "middle")
-    .text(this.formatSliderDate(this.startDate))
-    .attr("transform", "translate(0," + -25 + ")");
 
   update(h) {
     // update position and text of label according to slider scale
