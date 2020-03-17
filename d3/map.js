@@ -103,7 +103,8 @@ const getDataForDate = (confirmed, deaths, date) =>
     long: d.Long,
     country: d["Country/Region"],
     confirmed: d[date],
-    province: d["Province/State"],
+    // Check for cases where province is the same as country (like France, France) and remove
+    province: d["Province/State"] == d["Country/Region"] ? "" : d["Province/State"],
     deaths: deaths[idx][date]
   }));
 
