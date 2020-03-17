@@ -14,9 +14,19 @@ body {
     fill: #fff;
 }
 
+#map-shadow {
+  height:100px;
+  position: absolute;
+  bottom: 0px;
+  z-index: 1000;
+  width: 100%;
+  background: transparent;
+  background: linear-gradient(to bottom,  rgba(62,65,71,0) 0%,rgba(62,65,71,0) 14%,rgba(62,65,71,1) 89%,rgba(62,65,71,1) 99%); /* W3C */
+}
 #vis svg {
   display: block;
   margin: auto;
+  overflow: visible;
 }
 
 #play-button {
@@ -56,7 +66,7 @@ body {
 }
 
 .track-inset {
-  stroke: #dcdcdc;
+  stroke: #fff;
   stroke-width: 20px;
 }
 
@@ -68,8 +78,8 @@ body {
 }
 
 .handle {
-  fill: #fff;
-  stroke: #000;
-  stroke-opacity: 0.5;
-  stroke-width: 1.25px;
+  fill: #969eab;
+  /* stroke: #000; */
+  /* stroke-opacity: 0.5; */
+  /* stroke-width: 1.25px; */
 }

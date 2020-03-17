@@ -31,7 +31,7 @@ var x = d3
 var slider = sliderSvg
   .append("g")
   .attr("class", "slider")
-  .attr("transform", "translate(" + margin.left + "," + sliderHeight / 5 + ")");
+  .attr("transform", "translate(" + margin.left + "," + 0 / 5 + ")");
 
 slider
   .append("line")
