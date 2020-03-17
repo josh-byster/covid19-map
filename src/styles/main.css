@@ -67,3 +67,7 @@ div.tooltip.active {
   z-index: 1000;
 }
 
+.red {
+  color: #e74c3c;
+  display:inline;
+}

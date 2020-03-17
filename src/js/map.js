@@ -231,7 +231,7 @@ class Map {
       d.country
     }</b><br/>Confirmed: ${this.numWithCommas(
       d.confirmed
-    )}<br/>Deaths: ${this.numWithCommas(d.deaths)}`;
+    )}<br/>Deaths: <p class="red">${this.numWithCommas(d.deaths)}</p>`;
 
   renderForState = animated => {
     const currentData = this.dateToDataMap[this.curDateIdx];
