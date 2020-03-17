@@ -67,9 +67,3 @@ div.tooltip.active {
   z-index: 1000;
 }
 
-#animate {
-  position: fixed;
-  bottom: 30px;
-  right: 140px;
-  z-index: 1000;
-}

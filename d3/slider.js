@@ -1,4 +1,4 @@
-var formatBottomDate = d3.timeFormat("%b %d");
+var formatBottomDate = d3.timeFormat("%b %-d");
 var formatSliderDate = d3.timeFormat("%b %-d");
 var parseDate = d3.timeParse("%m/%d/%y");
 

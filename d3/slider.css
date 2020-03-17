@@ -85,3 +85,32 @@ body {
   /* stroke-opacity: 0.5; */
   /* stroke-width: 1.25px; */
 }
+
+#animate:hover {
+  background-color: #fff;
+  color: #000;
+  transition: 0.5s;
+}
+#animate {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin:auto;
+  display:block;
+  top: 40px;
+  z-index: 1000;
+
+
+  outline: none;
+  padding: 5px 15px;
+  background-color: transparent;
+  color: #fff;
+  border-width: 0px;
+  font-family: "avenir next", Arial, sans-serif;
+  font-size: 16px;
+  border-radius: 3px;
+  border: 2px solid #fff;
+  transition: 0.5s;
+  font-weight: 600;
+}
+
