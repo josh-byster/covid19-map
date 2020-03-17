@@ -7,7 +7,7 @@ body {
   margin-left: auto;
   margin-right: auto;
   width: 100%;
-  height: 100%;
+  height: 50%;
   overflow: hidden;
 }
 path {
@@ -33,13 +33,13 @@ div.tooltip.active {
   display: block;
 }
 
-circle {
+.visual circle {
   transition: fill-opacity 0.4s ease-in-out;
   fill-opacity: 0.6;
   /* stroke: #fff; */
   /* stroke-width: 0.1px; */
 }
-circle.hover {
+.visual circle.hover {
   fill-opacity: 0.9;
   transition: fill-opacity 0.4s ease-in-out;
 }

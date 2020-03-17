@@ -1,7 +1,8 @@
 const width = window.innerWidth,
-  height = window.innerHeight;
-const SCALE_MIN = 0;
+  height = window.innerHeight-100;
+const SCALE_MIN = 1;
 const SCALE_MAX = 70000;
+const SMALLEST_MARKER_PX = 1;
 const BIGGEST_MARKER_PX = 60;
 const FRAME_MS = 30;
 const TOPOLOGY_LINK =
@@ -28,7 +29,7 @@ const mod = (n, m) => {
 const resize = () => {
   console.log(svg)
   svg.attr("width",window.innerWidth)
-  svg.attr('height',window.innerHeight)
+  svg.attr('height',window.innerHeight-100)
 }
 
 window.addEventListener("resize", resize);
@@ -36,15 +37,20 @@ const toColor = d3
   .scaleSqrt()
   .domain([SCALE_MIN, SCALE_MAX/2]).range(["#f1c40f","#c0392b"])
 
-const toSize = d3
-  .scaleSqrt()
-  .domain([SCALE_MIN, SCALE_MAX])
-  .range([0, BIGGEST_MARKER_PX]);
+const sizeFunction = d3
+.scaleSqrt()
+.domain([SCALE_MIN, SCALE_MAX])
+.range([SMALLEST_MARKER_PX, BIGGEST_MARKER_PX])
+// .clamp(true)
+
+const toSize = x => x == 0 ? 0 : sizeFunction(x);
 
 const setScaling = (scale) => {
-  toSize
+  sizeFunction
     .domain([SCALE_MIN, SCALE_MAX / (scale * scale)])
-    .range([0, BIGGEST_MARKER_PX / (2*scale -1)]);
+    .range([SMALLEST_MARKER_PX, BIGGEST_MARKER_PX / (scale)]);
+  console.log(sizeFunction.domain())
+  console.log(sizeFunction.range())
 };
 
 const projection = d3

@@ -6,11 +6,19 @@ body {
 
 #vis {
     position:fixed;
+    width: 100%;
     bottom: 0px;
     left: 0px;
     height:100px;
+    background-color: #3e4147;
     fill: #fff;
 }
+
+#vis svg {
+  display: block;
+  margin: auto;
+}
+
 #play-button {
   position: absolute;
   top: 140px;
@@ -44,12 +52,12 @@ body {
 .track {
   stroke: #000;
   stroke-opacity: 0.3;
-  stroke-width: 10px;
+  stroke-width: 22px;
 }
 
 .track-inset {
   stroke: #dcdcdc;
-  stroke-width: 8px;
+  stroke-width: 20px;
 }
 
 .track-overlay {

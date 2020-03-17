@@ -76,7 +76,7 @@ slider
 var handle = slider
   .insert("circle", ".track-overlay")
   .attr("class", "handle")
-  .attr("r", 9);
+  .attr("r", 15);
 
 var label = slider
   .append("text")
