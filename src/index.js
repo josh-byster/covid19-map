@@ -14,6 +14,5 @@ slider.setMap(map);
 Promise.all([fetchData, fetchTopology]).then(([data, topology]) => {
   map.setTopology(topology);
   map.setData(data);
-    console.log()
-  slider.setDateRange(data["allDates"][0], data["allDates"][data["allDates"].length-1])
+  slider.setDateRange(data.startDate, data.endDate)
 });

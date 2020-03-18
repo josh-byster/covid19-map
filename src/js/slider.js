@@ -7,6 +7,7 @@ class Slider {
   setMap(map) {
     this.map = map;
   }
+  
   computeDimensions = () => {
     return {
       width:

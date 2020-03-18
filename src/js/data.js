@@ -39,15 +39,20 @@ const processData = (confirmed, deaths, recovered) => {
       curDate
     )
   );
-  return { allDates, dateToDataMap };
+  return {
+    allDates,
+    dateToDataMap,
+    startDate: allDates[0],
+    endDate: allDates[allDates.length - 1]
+  };
 };
 
 const fetchTopology = d3.json(TOPOLOGY_LINK);
 
 const fetchData = Promise.all([
-    d3.csv(CONFIRMED_CASES_LINK),
-    d3.csv(DEATH_CASES_LINK),
-    d3.csv(RECOVERED_CASES_LINK)
-  ]).then(data => processData(...data));
+  d3.csv(CONFIRMED_CASES_LINK),
+  d3.csv(DEATH_CASES_LINK),
+  d3.csv(RECOVERED_CASES_LINK)
+]).then(data => processData(...data));
 
 export { fetchData, fetchTopology };
