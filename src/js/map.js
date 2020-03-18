@@ -259,12 +259,12 @@ class Map {
     if (this.tooltipHoverId !== -1) {
       this.tooltip.html(this.getTooltipText(currentData[this.tooltipHoverId]));
     }
-    d3.select("#subtitle").html(this.allDates[this.curDateIdx]);
+    // d3.select("#subtitle").html(this.allDates[this.curDateIdx]);
 
-    d3.select("#num-countries").html(`Number of countries affected: ${
-      this.getNumInfectedCountries(currentData).length
-    }
-    `);
+    // d3.select("#num-countries").html(`Number of countries affected: ${
+    //   this.getNumInfectedCountries(currentData).length
+    // }
+    // `);
   };
 }
 

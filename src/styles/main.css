@@ -1,5 +1,5 @@
 body {
-  font-family: "Roboto", sans-serif;
+  font-family: "avenir next";
   margin: 0px;
 }
 .visual {
@@ -41,33 +41,61 @@ div.tooltip.active {
   fill-opacity: 0.9;
   transition: fill-opacity 0.4s ease-in-out;
 }
-#title {
-  text-align: center;
-}
-#subtitle {
-  text-align: center;
-}
-#num-countries {
-  text-align: center;
-}
+
 .visual svg {
   background-color: #3e4147;
 }
 
-#step {
-  position: fixed;
-  z-index: 1000;
-  bottom: 30px;
-  right: 60px;
-}
-#prev {
-  position: fixed;
-  bottom: 30px;
-  right: 100px;
-  z-index: 1000;
-}
 
 .red {
   color: #e74c3c;
   display:inline;
+}
+
+#panel {
+  position: fixed;
+  width: 25%;
+  height: 100%;
+  background-color:#31353e;
+  z-index:10000;
+  font-family: "avenir next";
+}
+
+#info {
+  padding: 30px;
+}
+
+#panel #title {
+  color: #fff;
+  font-size:30px;
+  font-weight: 600;
+
+}
+
+#panel #subtitle {
+  color : #bfbfbf;
+}
+
+#panel #description {
+  padding-top:30px;
+  color: #fff;
+}
+
+#panel #source {
+  color: #bfbfbf;
+}
+
+#panel a {
+  text-decoration: none;
+  transition: color 0.5s;
+  color:#9a9aff;
+}
+#panel a:hover{
+  color: #8152f3;
+  transition: color 0.5s;
+}
+
+#description {
+  font-size:15px;
+  font-weight:1000;
 }

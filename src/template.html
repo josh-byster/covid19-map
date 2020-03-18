@@ -1,25 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
 
-  <title><%= htmlWebpackPlugin.options.title %></title>
+  <body>
+    <div id="root"></div>
 
-</head>
+    <div id="panel">
+      <div id="info">
+        <div id="title">COVID-19</div>
+        <div id="subtitle">
+          An interactive outbreak timeline by
+          <a href="https://joshbyster.com/" target="_blank">Josh Byster</a>.
+        </div>
+        <div id="description">
+          <p>
+            For most of us, the previous few weeks have been full of uncertainty
+            in multiple facets. Many lives have been drastically affected. At
+            the time of this writing, COVID-19 has claimed the lives of
+            thousands, and new information is emerging each day.
+          </p>
 
-<body>
+          <p>
+            It can be a challenge to conceptualize the exponential nature of the
+            spread. Hence, I created this map to help the community track the
+            evolution of the novel Coronavirus on both a global and local scale.
+          </p>
 
-  <div id="root"></div>
+          <p>
+            I hope this map, rather than inciting fear, emphasizes the
+            importance of <i>social distancing</i>, and how we, as a community,
+            have the power to
+            <a
+            target="_blank"
+              href="https://www.washingtonpost.com/graphics/2020/world/corona-simulator/"
+              >"flatten the curve"</a
+            >.
+          </p>
+        </div>
 
-  <div id="vis"><button id="animate">Animate</button></div>
-  <div class="visual"><div id="map-shadow"></div>
-  <link
-    href="https://fonts.googleapis.com/css?family=Roboto&display=swap"
-    rel="stylesheet"
-  />
-</body>
+        <div id="source">
+          <p>This project was created with d3.js and the code is available on <a href="https://github.com/josh-byster/covid19-spread-animation" target="_blank">GitHub</a>.</p>
+          <p>
+            Data source: Johns Hopkins University: The Center for Systems
+            Science and Engineering
+          </p>
 
+          <p>
+            Design inspired by Andrew Munsell's
+            <a href="https://ebola.andrewmunsell.com/" target="_blank">Ebola Visualization</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div id="vis"><button id="animate">Animate</button></div>
+    <div class="visual"><div id="map-shadow"></div></div>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+  </body>
 </html>

@@ -54,9 +54,11 @@ class Slider {
       "height",
       this.computeDimensions().height + this.margin.top + this.margin.bottom
     );
+
+    // Before the scale
     const oldX = d3
       .scaleTime()
-      .domain([this.startDate, this.endDate])
+      .domain(this.x.domain())
       .range(this.x.range())
       .clamp(true);
 

@@ -1,28 +1,34 @@
 body {
-  font-family: "avenir next", Arial, sans-serif;
   font-size: 12px;
   color: #696969;
 }
 
 #vis {
-    position:fixed;
-    width: 100%;
-    bottom: 0px;
-    left: 0px;
-    height:100px;
-    background-color: #3e4147;
-    fill: #fff;
-    z-index:200;
+  font-family: "avenir next", Arial, sans-serif;
+  position: fixed;
+  width: 100%;
+  bottom: 0px;
+  left: 0px;
+  height: 100px;
+  background-color: #3e4147;
+  fill: #fff;
+  z-index: 200;
 }
 
 #map-shadow {
-  height:100px;
+  height: 100px;
   position: absolute;
   bottom: 0px;
   z-index: 100;
   width: 100%;
   background: transparent;
-  background: linear-gradient(to bottom,  rgba(62,65,71,0) 0%,rgba(62,65,71,0) 14%,rgba(62,65,71,1) 89%,rgba(62,65,71,1) 99%); /* W3C */
+  background: linear-gradient(
+    to bottom,
+    rgba(62, 65, 71, 0) 0%,
+    rgba(62, 65, 71, 0) 14%,
+    rgba(62, 65, 71, 1) 89%,
+    rgba(62, 65, 71, 1) 99%
+  ); /* W3C */
 }
 
 #vis svg {
@@ -95,12 +101,11 @@ body {
   position: absolute;
   left: 0;
   right: 0;
-  margin:auto;
-  display:block;
+  margin: auto;
+  display: block;
   top: 40px;
   z-index: 1000;
-  width:150px;
-
+  width: 150px;
 
   outline: none;
   padding: 5px 15px;
@@ -114,4 +119,3 @@ body {
   transition: 0.5s;
   font-weight: 600;
 }
-
