@@ -8,18 +8,8 @@ class Map {
   SMALLEST_MARKER_PX = 1;
   BIGGEST_MARKER_PX = 60;
   FRAME_MS = 250;
-  TOPOLOGY_LINK =
-    "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
-  CONFIRMED_CASES_LINK =
-    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv";
 
-  DEATH_CASES_LINK =
-    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv";
-
-    RECOVERED_CASES_LINK =
-    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv";
-  
   dateToDataMap = [];
   allDates = [];
   curDateIdx = 0;
@@ -29,6 +19,19 @@ class Map {
 
   setSlider(slider) {
     this.slider = slider;
+  }
+
+  setData({ allDates, dateToDataMap }) {
+    this.allDates = allDates;
+    this.dateToDataMap = dateToDataMap;
+    this.renderForState(true);
+  }
+
+  updateForDate(curDate) {
+    if (this.curDateIdx !== this.allDates.indexOf(curDate)) {
+      this.curDateIdx = this.allDates.indexOf(curDate);
+      this.renderForState(true);
+    }
   }
   constructor() {
     window.addEventListener("resize", this.resize);
@@ -45,29 +48,17 @@ class Map {
     d3.select("#animate").on("click", (d, i) => {
       this.toggleAnimation();
     });
+  }
 
-    d3.json(this.TOPOLOGY_LINK)
-      .then(topology => {
-        // Create the base map
-        const geojson = topojson.feature(topology, topology.objects.countries);
-        this.g
-          .selectAll("path")
-          .data(geojson.features)
-          .enter()
-          .append("path")
-          .attr("d", this.path);
-      })
-      .then(() =>
-        Promise.all([
-          d3.csv(this.CONFIRMED_CASES_LINK),
-          d3.csv(this.DEATH_CASES_LINK),
-          d3.csv(this.RECOVERED_CASES_LINK)
-        ])
-      )
-      .then(data => {
-        this.loadData(...data);
-        this.renderForState();
-      });
+  setTopology(topology) {
+    // Create the base map
+    const geojson = topojson.feature(topology, topology.objects.countries);
+    this.g
+      .selectAll("path")
+      .data(geojson.features)
+      .enter()
+      .append("path")
+      .attr("d", this.path);
   }
 
   numWithCommas = x => {
@@ -141,31 +132,6 @@ class Map {
     // Prevent padding from taking up space at the bottom of the page at the beginning
     .style("display", "none");
 
-  getDataForDate = (confirmed, deaths, recovered, date) =>
-    confirmed.map((d, idx) => ({
-      id: d.id,
-      lat: d.Lat,
-      long: d.Long,
-      country: d["Country/Region"],
-      confirmed: d[date],
-      // Check for cases where province is the same as country (like France, France) and remove
-      province:
-        d["Province/State"] == d["Country/Region"] ? "" : d["Province/State"],
-      deaths: deaths[idx][date],
-      recovered: recovered[idx][date]
-    }));
-
-  addIndicesToData = d => d.map((row, idx) => ({ id: idx, ...row }));
-  loadData = (confirmed, deaths, recovered) => {
-    const confirmedWithIndices = this.addIndicesToData(confirmed);
-    const deathsWithIndices = this.addIndicesToData(deaths);
-    const recoveredWithIndices = this.addIndicesToData(recovered);
-    this.allDates = Object.keys(confirmedWithIndices[0]).slice(5);
-    this.dateToDataMap = this.allDates.map(curDate =>
-      this.getDataForDate(confirmedWithIndices, deathsWithIndices, recoveredWithIndices, curDate)
-    );
-  };
-
   incrementDate = () => {
     this.curDateIdx = this.mod(this.curDateIdx + 1, this.dateToDataMap.length);
   };
@@ -184,7 +150,9 @@ class Map {
         this.incrementDate();
         this.renderForState();
         // Update slider
-        this.slider.update(this.slider.parseDate(this.allDates[this.curDateIdx]));
+        this.slider.update(
+          this.slider.parseDate(this.allDates[this.curDateIdx])
+        );
       }, this.FRAME_MS);
       d3.select("#animate").html("Stop");
     }

@@ -165,10 +165,8 @@ class Slider {
     this.handle.attr("cx", this.x(h));
     this.label.attr("x", this.x(h)).text(this.formatSliderDate(h));
     const curDate = d3.timeFormat("%-m/%-d/%y")(h);
-    if (this.map.curDateIdx !== this.map.allDates.indexOf(curDate)) {
-      this.map.curDateIdx = this.map.allDates.indexOf(curDate);
-      this.map.renderForState(true);
-    }
+    this.map.updateForDate(curDate)
+
   }
 }
 

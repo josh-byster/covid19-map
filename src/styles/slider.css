@@ -16,6 +16,7 @@ body {
 }
 
 #slider {
+  height:100px;
   width: 75%;
   left: 25%;
   position: absolute;
