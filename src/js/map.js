@@ -204,9 +204,9 @@ class Map {
   };
 
   getTooltipText = d =>
-    `${d.province ? d.province + "<br/>" : ""}<b>${
+    `${d.province ? d.province + "<br/>" : ""}<b><span class="countryname">${
       d.country
-    }</b><br/>Confirmed: ${this.numWithCommas(
+    }</span></b><br/>Confirmed: ${this.numWithCommas(
       d.confirmed
     )}<br/>Deaths: <span class="red">${this.numWithCommas(d.deaths)}<br/></span>
     Recovered: <span class="green">${this.numWithCommas(d.recovered)}</span>`;
