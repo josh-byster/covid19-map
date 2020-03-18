@@ -26,6 +26,12 @@ const getDataForDate = (confirmed, deaths, recovered, date) =>
   }));
 
 const addIndicesToData = d => d.map((row, idx) => ({ id: idx, ...row }));
+
+const getTotalCases = (data, date) => {
+  return data.reduce((acc, row) => acc + +row[date],0);
+
+}
+
 const processData = (confirmed, deaths, recovered) => {
   const confirmedWithIndices = addIndicesToData(confirmed);
   const deathsWithIndices = addIndicesToData(deaths);
@@ -39,11 +45,15 @@ const processData = (confirmed, deaths, recovered) => {
       curDate
     )
   );
+
+  const startDate =allDates[0]
+  const endDate =  allDates[allDates.length - 1];
   return {
     allDates,
     dateToDataMap,
-    startDate: allDates[0],
-    endDate: allDates[allDates.length - 1]
+    startDate,
+    endDate,
+    totalCases: getTotalCases(confirmedWithIndices,endDate) 
   };
 };
 
