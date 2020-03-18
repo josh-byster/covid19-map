@@ -96,7 +96,8 @@ class Map {
 
   projection = d3
     .geoMercator()
-    .scale(200)
+    .scale(225)
+    .center([-30,0])
     .translate([this.width / 2, (3 * this.height) / 4]);
 
   path = d3.geoPath(this.projection);
