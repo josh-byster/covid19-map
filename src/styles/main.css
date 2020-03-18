@@ -1,5 +1,5 @@
 body {
-  font-family: "avenir next";
+  font-family: "Lato";
   margin: 0px;
 }
 .visual {
@@ -48,7 +48,10 @@ div.tooltip.active {
 
 .red {
   color: #e74c3c;
-  display:inline;
+}
+
+.green {
+  color: #27ae60;
 }
 
 #panel {
@@ -60,7 +63,7 @@ div.tooltip.active {
   height: 100%;
   background-color:#31353e;
   z-index:10000;
-  font-family: "avenir next";
+  font-family: "Lato";
 }
 @media(max-width:800px){
   #panel{
@@ -104,5 +107,5 @@ div.tooltip.active {
 
 #description {
   font-size:15px;
-  font-weight:1000;
+  font-weight:300;
 }

@@ -4,7 +4,7 @@ body {
 }
 
 #vis {
-  font-family: "avenir next", Arial, sans-serif;
+  font-family: "Lato", Arial, sans-serif;
   position: fixed;
   width: 100%;
   bottom: 0px;
@@ -44,6 +44,12 @@ body {
   ); /* W3C */
 }
 
+@media(min-width:800px){
+  #map-shadow{
+    left: -25vw;
+    width: 100vw;
+  }
+}
 #vis svg {
   display: block;
   margin: auto;
@@ -125,7 +131,7 @@ body {
   background-color: transparent;
   color: #fff;
   border-width: 0px;
-  font-family: "avenir next", Arial, sans-serif;
+  font-family: "Lato", Arial, sans-serif;
   font-size: 16px;
   border-radius: 3px;
   border: 2px solid #fff;

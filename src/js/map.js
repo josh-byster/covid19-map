@@ -7,7 +7,7 @@ class Map {
   SCALE_MAX = 70000;
   SMALLEST_MARKER_PX = 1;
   BIGGEST_MARKER_PX = 60;
-  FRAME_MS = 150;
+  FRAME_MS = 250;
   TOPOLOGY_LINK =
     "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
@@ -17,6 +17,9 @@ class Map {
   DEATH_CASES_LINK =
     "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv";
 
+    RECOVERED_CASES_LINK =
+    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv";
+  
   dateToDataMap = [];
   allDates = [];
   curDateIdx = 0;
@@ -57,7 +60,8 @@ class Map {
       .then(() =>
         Promise.all([
           d3.csv(this.CONFIRMED_CASES_LINK),
-          d3.csv(this.DEATH_CASES_LINK)
+          d3.csv(this.DEATH_CASES_LINK),
+          d3.csv(this.RECOVERED_CASES_LINK)
         ])
       )
       .then(data => {
@@ -137,7 +141,7 @@ class Map {
     // Prevent padding from taking up space at the bottom of the page at the beginning
     .style("display", "none");
 
-  getDataForDate = (confirmed, deaths, date) =>
+  getDataForDate = (confirmed, deaths, recovered, date) =>
     confirmed.map((d, idx) => ({
       id: d.id,
       lat: d.Lat,
@@ -147,16 +151,18 @@ class Map {
       // Check for cases where province is the same as country (like France, France) and remove
       province:
         d["Province/State"] == d["Country/Region"] ? "" : d["Province/State"],
-      deaths: deaths[idx][date]
+      deaths: deaths[idx][date],
+      recovered: recovered[idx][date]
     }));
 
   addIndicesToData = d => d.map((row, idx) => ({ id: idx, ...row }));
-  loadData = (confirmed, deaths) => {
+  loadData = (confirmed, deaths, recovered) => {
     const confirmedWithIndices = this.addIndicesToData(confirmed);
     const deathsWithIndices = this.addIndicesToData(deaths);
+    const recoveredWithIndices = this.addIndicesToData(recovered);
     this.allDates = Object.keys(confirmedWithIndices[0]).slice(5);
     this.dateToDataMap = this.allDates.map(curDate =>
-      this.getDataForDate(confirmedWithIndices, deathsWithIndices, curDate)
+      this.getDataForDate(confirmedWithIndices, deathsWithIndices, recoveredWithIndices, curDate)
     );
   };
 
@@ -233,7 +239,8 @@ class Map {
       d.country
     }</b><br/>Confirmed: ${this.numWithCommas(
       d.confirmed
-    )}<br/>Deaths: <p class="red">${this.numWithCommas(d.deaths)}</p>`;
+    )}<br/>Deaths: <span class="red">${this.numWithCommas(d.deaths)}<br/></span>
+    Recovered: <span class="green">${this.numWithCommas(d.recovered)}</span>`;
 
   renderForState = animated => {
     const currentData = this.dateToDataMap[this.curDateIdx];
