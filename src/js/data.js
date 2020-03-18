@@ -31,6 +31,11 @@ const getDataForDate = (confirmed, deaths, recovered, date) =>
     recovered: recovered[idx][date]
   }));
 
+const kFormatter = num =>
+  Math.abs(num) > 999
+    ? Math.sign(num) * (Math.abs(num) / 1000).toFixed(1) + "k"
+    : num.toFixed(0);
+
 const addIndicesToData = d => d.map((row, idx) => ({ id: idx, ...row }));
 
 const getTotalCases = (data, date) => {
@@ -58,7 +63,8 @@ const processData = (confirmed, deaths, recovered) => {
     dateToDataMap,
     startDate,
     endDate,
-    totalCases: getTotalCases(confirmedWithIndices, endDate)
+    totalCases: getTotalCases(confirmedWithIndices, endDate),
+    confirmedWithIndices
   };
 };
 
@@ -75,4 +81,4 @@ d3.json(LAST_REFRESH).then(data => {
   d3.select("#lastupdated").html(`Last update to dataset: ${lastUpdated}.`);
 });
 
-export { fetchData, fetchTopology };
+export { fetchData, fetchTopology, getTotalCases, kFormatter };

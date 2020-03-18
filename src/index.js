@@ -3,7 +3,7 @@ import Map from "./js/map";
 import Slider from "./js/slider";
 import "./styles/main.css";
 import "./styles/slider.css";
-import { fetchData, fetchTopology } from "./js/data";
+import { fetchData, fetchTopology, kFormatter } from "./js/data";
 const d3 = require("d3");
 
 const map = new Map();
@@ -11,10 +11,7 @@ const slider = new Slider();
 map.setSlider(slider);
 slider.setMap(map);
 
-const kFormatter = num =>
-  Math.abs(num) > 999
-    ? Math.sign(num) * (Math.abs(num) / 1000).toFixed(1) + "k"
-    : num.toFixed(0);
+
 
 Promise.all([fetchData, fetchTopology]).then(([data, topology]) => {
   map.setTopology(topology);

@@ -1,5 +1,7 @@
 const d3 = require("d3");
 const topojson = require("topojson");
+import {getTotalCases, kFormatter} from "./data";
+
 class Map {
   width = window.innerWidth;
   height = window.innerHeight - 100;
@@ -20,33 +22,40 @@ class Map {
     this.slider = slider;
   }
 
-  setData({ allDates, dateToDataMap }) {
+  setData({ allDates, dateToDataMap,confirmedWithIndices }) {
     this.allDates = allDates;
     this.dateToDataMap = dateToDataMap;
     this.curDateIdx = allDates.length - 1;
+    this.confirmed = confirmedWithIndices;
     this.renderForState(true, 2000);
   }
 
   updateForDate(curDate) {
     if (this.curDateIdx !== this.allDates.indexOf(curDate)) {
+      const prev = this.curDateIdx;
       this.curDateIdx = this.allDates.indexOf(curDate);
       this.renderForState(true);
+      this.renderTotalCases(true, this.allDates[prev]);
+
     }
   }
   constructor() {
     window.addEventListener("resize", this.resize);
     const self = this;
     d3.select("body").on("keydown", function() {
+      const prev = self.allDates[self.curDateIdx];
       if (d3.event.keyCode === 39) {
         // Right arrow
         self.incrementDate();
         self.renderForState(true);
         self.updateSlider();
+        self.renderTotalCases(true,prev)
       } else if (d3.event.keyCode === 37) {
         // Left arrow
         self.decrementDate();
         self.renderForState(true);
         self.updateSlider();
+        self.renderTotalCases(true,prev)
       } else if (d3.event.keyCode === 32) {
         self.toggleAnimation();
       }
@@ -165,9 +174,11 @@ class Map {
       d3.select("#animate").html("Animate");
     } else {
       this.animatingHandle = setInterval(() => {
+        const prev = this.allDates[this.curDateIdx];
         this.incrementDate();
         this.renderForState();
         this.updateSlider();
+        this.renderTotalCases(false,prev);
       }, this.FRAME_MS);
       d3.select("#animate").html("Stop");
     }
@@ -214,6 +225,22 @@ class Map {
       });
   };
 
+  renderTotalCases = (animated,prev) => {
+    const self = this;
+    d3.select("#total")
+    .transition()
+    .duration(animated ? 500 : 0)
+    .delay(0)
+    .tween("text", function() {
+      const previousCaseCount = getTotalCases(self.confirmed, prev);
+      const i = d3.interpolate(previousCaseCount, getTotalCases(self.confirmed,self.allDates[self.curDateIdx]));
+      return function(t) {
+        console.log(i(t))
+      d3.select(this).text(`~${kFormatter(i(t))}`);
+      };
+    });
+  }
+
   getNumInfectedCountries = data => {
     return data
       .filter(obj => +obj.confirmed > 0)
@@ -254,12 +281,7 @@ class Map {
     if (this.tooltipHoverId !== -1) {
       this.tooltip.html(this.getTooltipText(currentData[this.tooltipHoverId]));
     }
-    // d3.select("#subtitle").html(this.allDates[this.curDateIdx]);
 
-    // d3.select("#num-countries").html(`Number of countries affected: ${
-    //   this.getNumInfectedCountries(currentData).length
-    // }
-    // `);
   };
 }
 
