@@ -1,4 +1,8 @@
 const d3 = require("d3");
+const dayjs = require("dayjs");
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
+
 const CONFIRMED_CASES_LINK =
   "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv";
 
@@ -11,6 +15,8 @@ const RECOVERED_CASES_LINK =
 const TOPOLOGY_LINK =
   "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
+const LAST_REFRESH =
+  "https://api.github.com/repos/CSSEGISandData/COVID-19/commits?path=csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv&page=1&per_page=1";
 const getDataForDate = (confirmed, deaths, recovered, date) =>
   confirmed.map((d, idx) => ({
     id: d.id,
@@ -28,9 +34,8 @@ const getDataForDate = (confirmed, deaths, recovered, date) =>
 const addIndicesToData = d => d.map((row, idx) => ({ id: idx, ...row }));
 
 const getTotalCases = (data, date) => {
-  return data.reduce((acc, row) => acc + +row[date],0);
-
-}
+  return data.reduce((acc, row) => acc + +row[date], 0);
+};
 
 const processData = (confirmed, deaths, recovered) => {
   const confirmedWithIndices = addIndicesToData(confirmed);
@@ -46,14 +51,14 @@ const processData = (confirmed, deaths, recovered) => {
     )
   );
 
-  const startDate =allDates[0]
-  const endDate =  allDates[allDates.length - 1];
+  const startDate = allDates[0];
+  const endDate = allDates[allDates.length - 1];
   return {
     allDates,
     dateToDataMap,
     startDate,
     endDate,
-    totalCases: getTotalCases(confirmedWithIndices,endDate) 
+    totalCases: getTotalCases(confirmedWithIndices, endDate)
   };
 };
 
@@ -64,5 +69,10 @@ const fetchData = Promise.all([
   d3.csv(DEATH_CASES_LINK),
   d3.csv(RECOVERED_CASES_LINK)
 ]).then(data => processData(...data));
+
+d3.json(LAST_REFRESH).then(data => {
+  const lastUpdated = dayjs(data[0]["commit"]["committer"]["date"]).fromNow();
+  d3.select("#lastupdated").html(`Last update to dataset: ${lastUpdated}.`);
+});
 
 export { fetchData, fetchTopology };

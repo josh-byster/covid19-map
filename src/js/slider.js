@@ -17,8 +17,6 @@ class Slider {
   };
 
   setDateRange(startDate, endDate) {
-    console.log(startDate);
-    console.log(endDate)
     this.startDate = this.parseDate(startDate);
     this.endDate = this.parseDate(endDate);
 
