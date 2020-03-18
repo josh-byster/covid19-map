@@ -15,6 +15,12 @@ class Slider {
     };
   };
 
+  setDateRange(startDate, endDate) {
+    this.startDate = startDate;
+    this.endDate = endDate;
+    
+  }
+
   margin = { top: 0, right: 50, bottom: 0, left: 50 };
   sliderWidth = this.computeDimensions().width;
 

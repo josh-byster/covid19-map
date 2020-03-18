@@ -9,7 +9,6 @@ class Map {
   BIGGEST_MARKER_PX = 60;
   FRAME_MS = 250;
 
-
   dateToDataMap = [];
   allDates = [];
   curDateIdx = 0;

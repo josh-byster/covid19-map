@@ -4,15 +4,13 @@ import Slider from "./js/slider";
 import WebpackLogo from "./images/webpack-logo.svg";
 import "./styles/main.css";
 import "./styles/slider.css";
-import {fetchData, fetchTopology} from "./js/data";
-
+import { fetchData, fetchTopology } from "./js/data";
 
 const map = new Map();
-Promise.all([fetchData,fetchTopology]).then(([data,topology]) => {
-    map.setTopology(topology);
-    map.setData(data);
-  });
-
 const slider = new Slider(map);
-
 map.setSlider(slider);
+
+Promise.all([fetchData, fetchTopology]).then(([data, topology]) => {
+  map.setTopology(topology);
+  map.setData(data);
+});
