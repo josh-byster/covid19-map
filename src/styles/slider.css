@@ -99,6 +99,7 @@ body {
   display:block;
   top: 40px;
   z-index: 1000;
+  width:150px;
 
 
   outline: none;
