@@ -104,7 +104,7 @@ div.tooltip.active {
 #panel a {
   text-decoration: none;
   transition: color 0.5s;
-  color:#78787d;
+  color:#8e8e92;
 }
 #panel a:hover{
   color: #0097e6;

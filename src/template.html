@@ -1,13 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-53422979-6"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "UA-53422979-6");
+    </script>
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <style>
       /* Set initial bg color to prevent flash of white screen */
-      html{
-        background-color:#3e4147;
+      html {
+        background-color: #3e4147;
       }
     </style>
     <title><%= htmlWebpackPlugin.options.title %></title>
@@ -25,48 +40,69 @@
         </div>
         <div id="description">
           <p>
-            For most of us, the previous weeks have been full of uncertainty
-            in multiple facets. Daily life has been drastically affected. At
-            the time of this writing, COVID-19 has claimed the lives of
-            thousands, and new information is emerging each day.
+            For most of us, the previous weeks have been full of uncertainty in
+            multiple facets. Daily life has been drastically affected. At the
+            time of this writing, COVID-19 has claimed the lives of thousands,
+            and has spread to over 120 countries.
           </p>
 
           <p>
             It can be a challenge to conceptualize the exponential nature of the
-            spread. I created this map to visualize the growth trends in the virus over the past few months.
+            spread. I created this map to visualize the spread of the virus
+            since tracking began in January.
           </p>
 
           <p>
-            My goal for this map is not to incite fear, but rather to emphasize the
-            importance of <b></bi><i>social distancing</i></b>, and how we
-            have the power to
+            My goal for this map is not to incite fear, but rather to emphasize
+            the importance of <b><i>social distancing</i></b
+            >, and how we have the power to
             <a
-            target="_blank"
+              target="_blank"
               href="https://www.washingtonpost.com/graphics/2020/world/corona-simulator/"
               >"flatten the curve"</a
-            > by working together as a community.
+            >
+            by working together as a community.
           </p>
         </div>
         <div id="total">
           0
         </div>
-        confirmed cases
+        <span style="font-size:16px">confirmed cases</span>
         <div id="source">
-          <p>This project was created with d3.js and the code is available on <a href="https://github.com/josh-byster/covid19-spread-animation" target="_blank">GitHub</a>.</p>
+          <p>
+            This project was created with d3.js and the source code is available
+            on
+            <a
+              href="https://github.com/josh-byster/covid19-spread-animation"
+              target="_blank"
+              >GitHub</a
+            >.
+          </p>
           <p>
             Data source: Johns Hopkins University: The Center for Systems
-            Science and Engineering. </br><span id="lastupdated"></span></br>Data automatically refreshed multiple times each day.
+            Science and Engineering. <br /><span id="lastupdated"></span
+            ><br />Data automatically refreshed multiple times each day.
           </p>
 
           <p>
             Map design inspired by Andrew Munsell's
-            <a href="https://ebola.andrewmunsell.com/" target="_blank">Ebola Visualization</a>.
+            <a href="https://ebola.andrewmunsell.com/" target="_blank"
+              >Ebola Visualization</a
+            >.
           </p>
         </div>
       </div>
     </div>
-    <div id="vis"><div id="slider"><div id="map-shadow"></div><button id="animate">Animate</button></div></div>
+    <div id="vis">
+      <div id="slider">
+        <div id="map-shadow"></div>
+        <button id="animate">Animate</button>
+      </div>
+    </div>
     <div class="visual"></div>
-    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap"
+      rel="stylesheet"
+    />
   </body>
 </html>
