@@ -23,8 +23,8 @@ class Map {
   setData({ allDates, dateToDataMap }) {
     this.allDates = allDates;
     this.dateToDataMap = dateToDataMap;
-    this.curDateIdx = allDates.length - 1
-    this.renderForState(true,2000);
+    this.curDateIdx = allDates.length - 1;
+    this.renderForState(true, 2000);
   }
 
   updateForDate(curDate) {
@@ -35,6 +35,23 @@ class Map {
   }
   constructor() {
     window.addEventListener("resize", this.resize);
+    const self = this;
+    d3.select("body").on("keydown", function() {
+      if (d3.event.keyCode === 39) {
+        // Right arrow
+        self.incrementDate();
+        self.renderForState(true);
+        self.updateSlider();
+      } else if (d3.event.keyCode === 37) {
+        // Left arrow
+        self.decrementDate();
+        self.renderForState(true);
+        self.updateSlider();
+      } else if (d3.event.keyCode === 32) {
+        self.toggleAnimation();
+      }
+    });
+
     d3.select("#step").on("click", () => {
       this.incrementDate();
       this.renderForState(true);
@@ -97,7 +114,7 @@ class Map {
   projection = d3
     .geoMercator()
     .scale(225)
-    .center([-30,0])
+    .center([-30, 0])
     .translate([this.width / 2, (3 * this.height) / 4]);
 
   path = d3.geoPath(this.projection);
@@ -150,14 +167,15 @@ class Map {
       this.animatingHandle = setInterval(() => {
         this.incrementDate();
         this.renderForState();
-        // Update slider
-        this.slider.update(
-          this.slider.parseDate(this.allDates[this.curDateIdx])
-        );
+        this.updateSlider();
       }, this.FRAME_MS);
       d3.select("#animate").html("Stop");
     }
   };
+
+  updateSlider() {
+    this.slider.update(this.slider.parseDate(this.allDates[this.curDateIdx]));
+  }
 
   applyPropsToNodes = nodes => {
     const self = this;
@@ -211,7 +229,7 @@ class Map {
     )}<br/>Deaths: <span class="red">${this.numWithCommas(d.deaths)}<br/></span>
     Recovered: <span class="green">${this.numWithCommas(d.recovered)}</span>`;
 
-  renderForState = (animated,duration=250) => {
+  renderForState = (animated, duration = 250) => {
     const currentData = this.dateToDataMap[this.curDateIdx];
     const updates = this.g.selectAll("circle").data(currentData, d => d.id);
 
