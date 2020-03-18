@@ -11,7 +11,7 @@ class Slider {
     return {
       width:
         Math.min(500, window.innerWidth) - this.margin.left - this.margin.right,
-      height: 200 - this.margin.top - this.margin.bottom
+      height: 100 - this.margin.top - this.margin.bottom
     };
   };
 
@@ -21,7 +21,7 @@ class Slider {
   sliderHeight = this.computeDimensions().height;
 
   sliderSvg = d3
-    .select("#vis")
+    .select("#slider")
     .append("svg")
     .attr("width", this.sliderWidth + this.margin.left + this.margin.right)
     .attr("height", this.sliderHeight + this.margin.top + this.margin.bottom);

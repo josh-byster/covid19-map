@@ -15,11 +15,24 @@ body {
   z-index: 200;
 }
 
+#slider {
+  width: 75%;
+  left: 25%;
+  position: absolute;
+}
+
+@media(max-width:800px) {
+  #slider {
+    width: 100%;
+    left:0;
+  }
+}
+
 #map-shadow {
   height: 100px;
   position: absolute;
-  bottom: 0px;
-  z-index: 100;
+  bottom: 100px;
+  z-index: -1;
   width: 100%;
   background: transparent;
   background: linear-gradient(
