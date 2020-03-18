@@ -1,7 +1,6 @@
 // Test import of a JavaScript function, an SVG, and Sass
 import Map from "./js/map";
 import Slider from "./js/slider";
-import WebpackLogo from "./images/webpack-logo.svg";
 import "./styles/main.css";
 import "./styles/slider.css";
 import { fetchData, fetchTopology } from "./js/data";
@@ -24,8 +23,8 @@ Promise.all([fetchData, fetchTopology]).then(([data, topology]) => {
   d3.select("#total")
     .transition()
     .duration(4000)
-    .delay(0)
-    .tween("text", function(d) {
+    .delay(500)
+    .tween("text", function() {
       const i = d3.interpolate(0, data.totalCases);
       return function(t) {
       d3.select(this).text(`~${kFormatter(i(t))}`);

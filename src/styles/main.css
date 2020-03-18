@@ -105,7 +105,18 @@ div.tooltip.active {
   transition: color 0.5s;
 }
 
+@keyframes fadeIn {
+  0% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+
 #description {
+  animation: fadeIn 1s;
   font-size:15px;
   font-weight:400;
 }

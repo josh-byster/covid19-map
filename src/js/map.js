@@ -24,7 +24,7 @@ class Map {
     this.allDates = allDates;
     this.dateToDataMap = dateToDataMap;
     this.curDateIdx = allDates.length - 1
-    this.renderForState(true);
+    this.renderForState(true,2000);
   }
 
   updateForDate(curDate) {
@@ -35,17 +35,17 @@ class Map {
   }
   constructor() {
     window.addEventListener("resize", this.resize);
-    d3.select("#step").on("click", (d, i) => {
+    d3.select("#step").on("click", () => {
       this.incrementDate();
       this.renderForState(true);
     });
 
-    d3.select("#prev").on("click", (d, i) => {
+    d3.select("#prev").on("click", () => {
       this.decrementDate();
       this.renderForState();
     });
 
-    d3.select("#animate").on("click", (d, i) => {
+    d3.select("#animate").on("click", () => {
       this.toggleAnimation();
     });
   }
@@ -179,12 +179,12 @@ class Map {
           .style("left", d3.event.pageX + "px")
           .style("top", d3.event.pageY + "px");
       })
-      .on("mousemove", function(d) {
+      .on("mousemove", function() {
         self.tooltip
           .style("left", d3.event.pageX + 10 + "px")
           .style("top", d3.event.pageY + 5 + "px");
       })
-      .on("mouseout", function(d) {
+      .on("mouseout", function() {
         d3.select(this).classed("hover", false);
         self.tooltip
           .transition()
@@ -211,7 +211,7 @@ class Map {
     )}<br/>Deaths: <span class="red">${this.numWithCommas(d.deaths)}<br/></span>
     Recovered: <span class="green">${this.numWithCommas(d.recovered)}</span>`;
 
-  renderForState = animated => {
+  renderForState = (animated,duration=250) => {
     const currentData = this.dateToDataMap[this.curDateIdx];
     const updates = this.g.selectAll("circle").data(currentData, d => d.id);
 
@@ -226,6 +226,7 @@ class Map {
       this.g
         .selectAll("circle")
         .transition()
+        .duration(duration)
         .attr("r", d => this.toSize(d.confirmed));
     } else {
       this.g.selectAll("circle").attr("r", d => this.toSize(d.confirmed));
