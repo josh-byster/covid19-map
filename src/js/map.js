@@ -23,6 +23,7 @@ class Map {
   setData({ allDates, dateToDataMap }) {
     this.allDates = allDates;
     this.dateToDataMap = dateToDataMap;
+    this.curDateIdx = allDates.length - 1
     this.renderForState(true);
   }
 

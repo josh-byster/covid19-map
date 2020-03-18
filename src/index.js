@@ -7,10 +7,13 @@ import "./styles/slider.css";
 import { fetchData, fetchTopology } from "./js/data";
 
 const map = new Map();
-const slider = new Slider(map);
+const slider = new Slider();
 map.setSlider(slider);
+slider.setMap(map);
 
 Promise.all([fetchData, fetchTopology]).then(([data, topology]) => {
   map.setTopology(topology);
   map.setData(data);
+    console.log()
+  slider.setDateRange(data["allDates"][0], data["allDates"][data["allDates"].length-1])
 });
