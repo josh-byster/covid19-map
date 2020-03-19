@@ -250,8 +250,10 @@ class Map {
     )}<br/>Active: <span class="orange">${this.numWithCommas(
       d.confirmed - d.recovered - d.deaths
     )}</span></br>
-    Deaths: <span class="red">${this.numWithCommas(d.deaths)}<br/></span>
-    Recovered: <span class="green">${this.numWithCommas(d.recovered)}</span>
+    Recovered: <span class="green">${this.numWithCommas(
+      d.recovered
+    )}</span><br/>
+    Deaths: <span class="red">${this.numWithCommas(d.deaths)}</span>
     `;
 
   renderForState = (animated, duration = 250) => {

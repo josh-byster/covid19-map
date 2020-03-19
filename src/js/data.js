@@ -45,8 +45,8 @@ const getTotalCases = (data, date) => {
 const getAllTotalsForDate = (confirmed, deaths, recovered, date) => {
   const computedObj = {
     confirmed: getTotalCases(confirmed, date),
-    recovered: getTotalCases(deaths, date),
-    deaths: getTotalCases(recovered, date),
+    deaths: getTotalCases(deaths, date),
+    recovered: getTotalCases(recovered, date),
   };
   computedObj.active = computedObj.confirmed - computedObj.recovered - computedObj.deaths;
   return computedObj;
