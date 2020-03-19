@@ -42,6 +42,16 @@ const getTotalCases = (data, date) => {
   return data.reduce((acc, row) => acc + +row[date], 0);
 };
 
+const getAllTotalsForDate = (confirmed, deaths, recovered, date) => {
+  const computedObj = {
+    confirmed: getTotalCases(confirmed, date),
+    recovered: getTotalCases(deaths, date),
+    deaths: getTotalCases(recovered, date),
+  };
+  computedObj.active = computedObj.confirmed - computedObj.recovered - computedObj.deaths;
+  return computedObj;
+}
+
 const processData = (confirmed, deaths, recovered) => {
   const confirmedWithIndices = addIndicesToData(confirmed);
   const deathsWithIndices = addIndicesToData(deaths);
@@ -58,12 +68,16 @@ const processData = (confirmed, deaths, recovered) => {
 
   const startDate = allDates[0];
   const endDate = allDates[allDates.length - 1];
+  const totals = {};
+  for(let i = 0; i < allDates.length; i++){
+    totals[allDates[i]] = getAllTotalsForDate(confirmedWithIndices,deathsWithIndices,recoveredWithIndices,allDates[i]);
+  }
   return {
     allDates,
     dateToDataMap,
     startDate,
     endDate,
-    totalCases: getTotalCases(confirmedWithIndices, endDate),
+    totals,
     confirmedWithIndices
   };
 };
