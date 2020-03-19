@@ -251,10 +251,12 @@ class Map {
   getTooltipText = d =>
     `${d.province ? d.province + "<br/>" : ""}<b><span class="countryname">${
       d.country
-    }</span></b><br/>Confirmed: ${this.numWithCommas(
+    }</span></b><br/>Total: ${this.numWithCommas(
       d.confirmed
-    )}<br/>Deaths: <span class="red">${this.numWithCommas(d.deaths)}<br/></span>
-    Recovered: <span class="green">${this.numWithCommas(d.recovered)}</span>`;
+    )}<br/>Active: <span class="orange">${this.numWithCommas(d.confirmed - d.recovered - d.deaths)}</span></br>
+    Deaths: <span class="red">${this.numWithCommas(d.deaths)}<br/></span>
+    Recovered: <span class="green">${this.numWithCommas(d.recovered)}</span>
+    `;
 
   renderForState = (animated, duration = 250) => {
     const currentData = this.dateToDataMap[this.curDateIdx];
