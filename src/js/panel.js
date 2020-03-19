@@ -5,7 +5,8 @@ class Panel {
   constructor(totals, allDates) {
     this.totals = totals;
     this.allDates = allDates;
-    const currentDayTotals = totals[allDates[allDates.length - 1]];
+    const lastDate = allDates[allDates.length - 1];
+    const currentDayTotals = totals[lastDate];
     [
       { div: "#panel-confirmed", count: currentDayTotals.confirmed },
       { div: "#panel-recovered", count: currentDayTotals.recovered },
@@ -23,6 +24,7 @@ class Panel {
           };
         });
     });
+    d3.select("#panel-date").html(lastDate)
   }
 
   renderTotalCases = (animated, prevDate, curDate) => {
@@ -59,6 +61,7 @@ class Panel {
           };
         });
     });
+    d3.select("#panel-date").html(curDate)
   };
 }
 
