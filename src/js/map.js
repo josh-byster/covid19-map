@@ -7,7 +7,7 @@ class Map {
   SCALE_MIN = 1;
   SCALE_MAX = 70000;
   SMALLEST_MARKER_PX = 1;
-  BIGGEST_MARKER_PX = 60;
+  BIGGEST_MARKER_PX = 20;
   FRAME_MS = 250;
 
   dateToDataMap = [];
