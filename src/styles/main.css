@@ -53,14 +53,17 @@ div.tooltip.active {
 
 .red {
   color: #e74c3c;
+  fill: #e74c3c;
 }
 
 .green {
   color: #27ae60;
+  fill: #27ae60;
 }
 
 .orange {
   color: #e67e22;
+  fill: #e67e22;
 }
 
 #panel {

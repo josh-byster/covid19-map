@@ -25,6 +25,10 @@ class Map {
     this.panel = panel;
   }
 
+  setPlot(plot) {
+    this.plot = plot;
+  }
+
   setData({ allDates, dateToDataMap, confirmedWithIndices }) {
     this.allDates = allDates;
     this.dateToDataMap = dateToDataMap;
@@ -222,6 +226,7 @@ class Map {
           .style("display", "block")
           .style("left", d3.event.pageX + "px")
           .style("top", d3.event.pageY + "px");
+          self.plot.plot(d.id);
       })
       .on("mousemove", function() {
         self.tooltip
