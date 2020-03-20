@@ -55,27 +55,26 @@ class Plot {
     const [confirmed, recovered, deaths] = [
       "confirmed",
       "recovered",
-      "deaths"
+      "deaths",
+      "active"
     ].map(cur => {
       return this.dateToDataMap.map(data => {
         return +data[id][cur];
       });
     });
-    return {confirmed,recovered,deaths}
+
+    const active = confirmed.map((total, i) => {
+      return total - recovered[i] - deaths[i];
+    });
+    return { confirmed, recovered, deaths, active };
   }
   clear() {
     console.log(this.svg.select("path"));
-    this.svg.select(".line").remove();
+    this.svg.selectAll(".line").remove();
     this.svg.selectAll(".dot").remove();
   }
-  plot(id) {
-    const {confirmed, recovered, deaths} = this.computePlotValsForId(id);
-    this.yScale.domain([0,max(confirmed)])
-    this.yAxis.call(d3.axisLeft(this.yScale));
-    console.log(confirmed);
-    this.clear();
-    // The number of datapoints
 
+  appendToPlot(data, color) {
     const self = this;
     // 7. d3's line generator
     const line = d3
@@ -88,34 +87,27 @@ class Plot {
       }) // set the y values for the line generator
       .curve(d3.curveMonotoneX); // apply smoothing to the line
 
-    // // 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
-    // const dataset = d3.range(21).map(function() {
-    //   return { y: d3.randomUniform(1)() };
-    // });
-
     // 9. Append the path, bind the data, and call the line generator
     this.svg
       .append("path")
-      .datum(confirmed) // 10. Binds data to the line
-      .attr("class", "line") // Assign a class for styling
+      .datum(data) // 10. Binds data to the line
+      .attr("class", `line ${color}`) // Assign a class for styling
       .attr("d", line); // 11. Calls the line generator
 
-    // 12. Appends a circle for each datapoint
-    this.svg
-      .selectAll(".dot")
-      .data(confirmed)
-      .enter()
-      .append("circle") // Uses the enter().append() method
-      .attr("class", "dot") // Assign a class for styling
-      .attr("cx", function(_, i) {
-        return self.xScale(i);
-      })
-      .attr("cy", function(d) {
-        return self.yScale(d);
-      })
-      .attr("r", 3)
-      .on("mouseover", function() {})
-      .on("mouseout", function() {});
+  }
+
+  plot(id) {
+    const { confirmed, active, recovered, deaths } = this.computePlotValsForId(
+      id
+    );
+    this.yScale.domain([0, max(active.concat(recovered,deaths))]);
+    this.yAxis.call(d3.axisLeft(this.yScale));
+    this.clear();
+    // The number of datapoints
+
+    this.appendToPlot(active, "orange");
+    this.appendToPlot(recovered, "green");
+    this.appendToPlot(deaths,  "red");
   }
 }
 
