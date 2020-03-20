@@ -130,14 +130,10 @@ body {
 
 #animate {
   animation: fadeIn 1s;
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin: auto;
-  display: block;
+  display: inline-block;
   top: 40px;
   z-index: 1000;
-  width: 150px;
+  min-width: 100px;
 
   outline: none;
   padding: 5px 15px;
