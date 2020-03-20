@@ -78,10 +78,11 @@ div.tooltip.active {
   #panel{
     position: relative;
     width:100%;
+    opacity:1;
   }
 }
 #info {
-  animation: fadeIn 1s;
+  animation: fadeIn 3s;
   padding: 30px;
 }
 

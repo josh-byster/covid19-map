@@ -30,7 +30,7 @@ class Map {
     this.dateToDataMap = dateToDataMap;
     this.curDateIdx = allDates.length - 1;
     this.confirmed = confirmedWithIndices;
-    this.renderForState(true, 2000);
+    this.renderForState(true, 2000,1000);
   }
 
   updateForDate(curDate) {
@@ -90,7 +90,12 @@ class Map {
       .data(geojson.features)
       .enter()
       .append("path")
-      .attr("d", this.path);
+      .attr("d", this.path)
+      .style("opacity",0)
+      .transition()
+      .ease(d3.easeCubicIn)
+      .duration(1000)
+      .style("opacity",1);
   }
 
   numWithCommas = x => {
@@ -256,7 +261,7 @@ class Map {
     Deaths: <span class="red">${this.numWithCommas(d.deaths)}</span>
     `;
 
-  renderForState = (animated, duration = 250) => {
+  renderForState = (animated, duration = 250,delay=0) => {
     const currentData = this.dateToDataMap[this.curDateIdx];
     const updates = this.g.selectAll("circle").data(currentData, d => d.id);
 
@@ -272,6 +277,7 @@ class Map {
         .selectAll("circle")
         .transition()
         .duration(duration)
+        .delay(delay)
         .attr("r", d => this.toSize(d.confirmed));
     } else {
       this.g.selectAll("circle").attr("r", d => this.toSize(d.confirmed));
