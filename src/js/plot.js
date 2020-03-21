@@ -24,7 +24,10 @@ class Plot {
       .attr(
         "transform",
         "translate(" + this.margin.left + "," + this.margin.top + ")"
-      );
+      )
+
+
+    
 
     // 5. X scale will use the index of our data
     this.xScale = d3
@@ -48,6 +51,7 @@ class Plot {
       .attr("transform", "translate(0," + this.height + ")")
       .call(d3.axisBottom(this.xScale).tickFormat(formatAxisDate).ticks(2)); // Create an axis component with d3.axisBottom
 
+      // d3.select(".domain").remove()
     // 4. Call the y axis in a group tag
     this.yAxis = this.svg
       .append("g")
@@ -77,13 +81,14 @@ class Plot {
     this.svg.selectAll(".dot").remove();
   }
 
+
   appendToPlot(data, color) {
     const self = this;
     // 7. d3's line generator
     const line = d3
       .line()
       .x(function(d, i) {
-        return self.xScale(i);
+        return self.xScale(parseDate(self.allDates[i]));
       }) // set the x values for the line generator
       .y(function(d) {
         return self.yScale(d);

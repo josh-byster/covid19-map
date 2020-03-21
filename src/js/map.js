@@ -1,6 +1,6 @@
 const d3 = require("d3");
 const topojson = require("topojson");
-
+import {parseDate} from "./data"
 class Map {
   width = window.innerWidth;
   height = window.innerHeight - 100;
@@ -204,7 +204,7 @@ class Map {
   };
 
   updateSlider() {
-    this.slider.update(this.slider.parseDate(this.allDates[this.curDateIdx]));
+    this.slider.update(parseDate(this.allDates[this.curDateIdx]));
   }
 
   applyPropsToNodes = nodes => {

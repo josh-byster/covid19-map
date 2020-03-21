@@ -1,8 +1,9 @@
 const d3 = require("d3");
+import {parseDate} from "./data";
+
 class Slider {
   formatBottomDate = d3.timeFormat("%b %-d");
   formatSliderDate = d3.timeFormat("%b %-d");
-  parseDate = d3.timeParse("%m/%d/%y");
 
   setMap(map) {
     this.map = map;
@@ -17,8 +18,8 @@ class Slider {
   };
 
   setDateRange(startDate, endDate) {
-    this.startDate = this.parseDate(startDate);
-    this.endDate = this.parseDate(endDate);
+    this.startDate = parseDate(startDate);
+    this.endDate =parseDate(endDate);
 
     this.x = d3
     .scaleTime()
