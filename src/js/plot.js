@@ -1,4 +1,6 @@
 import { max } from "d3";
+import {parseDate} from "./data";
+
 
 const d3 = require("d3");
 // 2. Use the margin convention practice
@@ -12,8 +14,9 @@ class Plot {
     this.allDates = allDates;
     this.dateToDataMap = dateToDataMap;
     // 1. Add the SVG to the page and employ #2
+    console.log(d3.select(".graph"))
     this.svg = d3
-      .select(".graph")
+      .select(".tooltip")
       .append("svg")
       .attr("width", this.width + this.margin.left + this.margin.right)
       .attr("height", this.height + this.margin.top + this.margin.bottom)
@@ -23,26 +26,27 @@ class Plot {
         "translate(" + this.margin.left + "," + this.margin.top + ")"
       );
 
-    const n = 21;
-
     // 5. X scale will use the index of our data
     this.xScale = d3
-      .scaleLinear()
-      .domain([0, allDates.length]) // input
+      .scaleTime()
+      .domain([parseDate(this.allDates[0]), parseDate(this.allDates[allDates.length-1])]) // input
       .range([0, this.width]); // output
 
+    console.log(this.allDates[0])
     // 6. Y scale will use the randomly generate number
     this.yScale = d3
       .scaleLinear()
       .domain([0, 70000]) // input
       .range([this.height, 0]); // output
+      
 
+    const formatAxisDate = d3.timeFormat("%b %-d");
     // 3. Call the x axis in a group tag
     this.xAxis = this.svg
       .append("g")
       .attr("class", "x-axis")
       .attr("transform", "translate(0," + this.height + ")")
-      .call(d3.axisBottom(this.xScale)); // Create an axis component with d3.axisBottom
+      .call(d3.axisBottom(this.xScale).tickFormat(formatAxisDate).ticks(2)); // Create an axis component with d3.axisBottom
 
     // 4. Call the y axis in a group tag
     this.yAxis = this.svg
@@ -69,7 +73,6 @@ class Plot {
     return { confirmed, recovered, deaths, active };
   }
   clear() {
-    console.log(this.svg.select("path"));
     this.svg.selectAll(".line").remove();
     this.svg.selectAll(".dot").remove();
   }
@@ -93,21 +96,18 @@ class Plot {
       .datum(data) // 10. Binds data to the line
       .attr("class", `line ${color}`) // Assign a class for styling
       .attr("d", line); // 11. Calls the line generator
-
   }
 
   plot(id) {
-    const { confirmed, active, recovered, deaths } = this.computePlotValsForId(
-      id
-    );
-    this.yScale.domain([0, max(active.concat(recovered,deaths))]);
-    this.yAxis.call(d3.axisLeft(this.yScale));
+    const { active, recovered, deaths } = this.computePlotValsForId(id);
+    this.yScale.domain([0, max(active.concat(recovered, deaths))]);
+    this.yAxis.call(d3.axisLeft(this.yScale).ticks(4));
     this.clear();
     // The number of datapoints
 
     this.appendToPlot(active, "orange");
     this.appendToPlot(recovered, "green");
-    this.appendToPlot(deaths,  "red");
+    this.appendToPlot(deaths, "red");
   }
 }
 

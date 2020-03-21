@@ -222,7 +222,7 @@ class Map {
           .duration(500)
           .style("opacity", 0.9);
         self.tooltip
-          .html(self.getTooltipText(d))
+          // .html(self.getTooltipText(d))
           .style("display", "block")
           .style("left", d3.event.pageX + "px")
           .style("top", d3.event.pageY + "px");

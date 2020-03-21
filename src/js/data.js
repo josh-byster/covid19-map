@@ -3,6 +3,7 @@ const dayjs = require("dayjs");
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
+const parseDate = d3.timeParse("%m/%d/%y");
 const CONFIRMED_CASES_LINK =
   "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv";
 
@@ -95,4 +96,4 @@ d3.json(LAST_REFRESH).then(data => {
   d3.select("#lastupdated").html(`Last update to dataset: ${lastUpdated}.`);
 });
 
-export { fetchData, fetchTopology, getTotalCases, kFormatter };
+export { fetchData, fetchTopology, getTotalCases, kFormatter, parseDate };
