@@ -1,5 +1,5 @@
 const d3 = require("d3");
-import {parseDate} from "./data";
+import { parseDate } from "./data";
 
 class Slider {
   formatBottomDate = d3.timeFormat("%b %-d");
@@ -8,7 +8,7 @@ class Slider {
   setMap(map) {
     this.map = map;
   }
-  
+
   computeDimensions = () => {
     return {
       width:
@@ -19,43 +19,42 @@ class Slider {
 
   setDateRange(startDate, endDate) {
     this.startDate = parseDate(startDate);
-    this.endDate =parseDate(endDate);
+    this.endDate = parseDate(endDate);
 
     this.x = d3
-    .scaleTime()
-    .domain([this.startDate, this.endDate])
-    .range([0, this.targetValue])
-    .clamp(true);
+      .scaleTime()
+      .domain([this.startDate, this.endDate])
+      .range([0, this.targetValue])
+      .clamp(true);
 
     this.slider
-    .insert("g", ".track-overlay")
-    .attr("class", "ticks")
-    .attr("transform", "translate(0," + 18 + ")")
-    .selectAll("text")
-    .data(this.x.ticks(this.getNumTicks()))
-    .enter()
-    .append("text")
-    .attr("x", this.x)
-    .attr("y", 10)
-    .attr("text-anchor", "middle")
-    .text(d => {
-      return this.formatBottomDate(d);
-    });
+      .insert("g", ".track-overlay")
+      .attr("class", "ticks")
+      .attr("transform", "translate(0," + 18 + ")")
+      .selectAll("text")
+      .data(this.x.ticks(this.getNumTicks()))
+      .enter()
+      .append("text")
+      .attr("x", this.x)
+      .attr("y", 10)
+      .attr("text-anchor", "middle")
+      .text(d => {
+        return this.formatBottomDate(d);
+      });
 
-  this.handle = this.slider
-    .insert("circle", ".track-overlay")
-    .attr("class", "handle")
-    .attr("r", 15)
-    .attr("cx", this.targetValue)
+    this.handle = this.slider
+      .insert("circle", ".track-overlay")
+      .attr("class", "handle")
+      .attr("r", 15)
+      .attr("cx", this.targetValue);
 
-  this.label = this.slider
-    .append("text")
-    .attr("class", "label")
-    .attr("text-anchor", "middle")
-    .text(this.formatSliderDate(this.endDate))
-    .attr("transform", "translate(0," + -25 + ")")
-    .attr("x", this.targetValue);
-
+    this.label = this.slider
+      .append("text")
+      .attr("class", "label")
+      .attr("text-anchor", "middle")
+      .text(this.formatSliderDate(this.endDate))
+      .attr("transform", "translate(0," + -25 + ")")
+      .attr("x", this.targetValue);
   }
 
   margin = { top: 0, right: 50, bottom: 0, left: 50 };
@@ -75,7 +74,6 @@ class Slider {
   map;
   playButton = d3.select("#play-button");
   getNumTicks = () => (this.computeDimensions().width > 300 ? 4 : 2);
-
 
   slider = this.sliderSvg
     .append("g")
@@ -166,8 +164,6 @@ class Slider {
             self.update(self.x.invert(self.currentValue));
           })
       );
-
-
   }
 
   update(h) {

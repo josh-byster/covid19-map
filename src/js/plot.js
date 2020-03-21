@@ -1,20 +1,19 @@
 import { max } from "d3";
-import {parseDate} from "./data";
-
+import { parseDate } from "./data";
 
 const d3 = require("d3");
 // 2. Use the margin convention practice
 
 class Plot {
-  margin = { top: 50, right: 50, bottom: 50, left: 50 };
-  width = 200 - this.margin.left - this.margin.right; // Use the window's width
-  height = 200 - this.margin.top - this.margin.bottom; // Use the window's height
+  margin = { top: 10, right: 20, bottom: 20, left: 50 };
+  width = 150 - this.margin.left - this.margin.right; // Use the window's width
+  height = 150 - this.margin.top - this.margin.bottom; // Use the window's height
 
   constructor({ allDates, dateToDataMap }) {
     this.allDates = allDates;
     this.dateToDataMap = dateToDataMap;
     // 1. Add the SVG to the page and employ #2
-    console.log(d3.select(".graph"))
+    console.log(d3.select(".graph"));
     this.svg = d3
       .select(".tooltip")
       .append("svg")
@@ -24,24 +23,23 @@ class Plot {
       .attr(
         "transform",
         "translate(" + this.margin.left + "," + this.margin.top + ")"
-      )
-
-
-    
+      );
 
     // 5. X scale will use the index of our data
     this.xScale = d3
       .scaleTime()
-      .domain([parseDate(this.allDates[0]), parseDate(this.allDates[allDates.length-1])]) // input
+      .domain([
+        parseDate(this.allDates[0]),
+        parseDate(this.allDates[allDates.length - 1])
+      ]) // input
       .range([0, this.width]); // output
 
-    console.log(this.allDates[0])
+    console.log(this.allDates[0]);
     // 6. Y scale will use the randomly generate number
     this.yScale = d3
       .scaleLinear()
       .domain([0, 70000]) // input
       .range([this.height, 0]); // output
-      
 
     const formatAxisDate = d3.timeFormat("%b %-d");
     // 3. Call the x axis in a group tag
@@ -49,9 +47,14 @@ class Plot {
       .append("g")
       .attr("class", "x-axis")
       .attr("transform", "translate(0," + this.height + ")")
-      .call(d3.axisBottom(this.xScale).tickFormat(formatAxisDate).ticks(2)); // Create an axis component with d3.axisBottom
+      .call(
+        d3
+          .axisBottom(this.xScale)
+          .tickFormat(formatAxisDate)
+          .ticks(2)
+      ); // Create an axis component with d3.axisBottom
 
-      // d3.select(".domain").remove()
+    // d3.select(".domain").remove()
     // 4. Call the y axis in a group tag
     this.yAxis = this.svg
       .append("g")
@@ -80,7 +83,6 @@ class Plot {
     this.svg.selectAll(".line").remove();
     this.svg.selectAll(".dot").remove();
   }
-
 
   appendToPlot(data, color) {
     const self = this;

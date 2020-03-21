@@ -1,6 +1,6 @@
 const d3 = require("d3");
 const topojson = require("topojson");
-import {parseDate} from "./data"
+import { parseDate } from "./data";
 class Map {
   width = window.innerWidth;
   height = window.innerHeight - 100;
@@ -34,7 +34,7 @@ class Map {
     this.dateToDataMap = dateToDataMap;
     this.curDateIdx = allDates.length - 1;
     this.confirmed = confirmedWithIndices;
-    this.renderForState(true, 2000,1000);
+    this.renderForState(true, 2000, 1000);
   }
 
   updateForDate(curDate) {
@@ -95,11 +95,11 @@ class Map {
       .enter()
       .append("path")
       .attr("d", this.path)
-      .style("opacity",0)
+      .style("opacity", 0)
       .transition()
       .ease(d3.easeCubicIn)
       .duration(1000)
-      .style("opacity",1);
+      .style("opacity", 1);
   }
 
   numWithCommas = x => {
@@ -226,7 +226,7 @@ class Map {
           .style("display", "block")
           .style("left", d3.event.pageX + "px")
           .style("top", d3.event.pageY + "px");
-          self.plot.plot(d.id);
+        self.plot.plot(d.id);
       })
       .on("mousemove", function() {
         self.tooltip
@@ -266,7 +266,7 @@ class Map {
     Deaths: <span class="red">${this.numWithCommas(d.deaths)}</span>
     `;
 
-  renderForState = (animated, duration = 250,delay=0) => {
+  renderForState = (animated, duration = 250, delay = 0) => {
     const currentData = this.dateToDataMap[this.curDateIdx];
     const updates = this.g.selectAll("circle").data(currentData, d => d.id);
 

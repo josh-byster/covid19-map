@@ -24,7 +24,7 @@ class Panel {
           };
         });
     });
-    d3.select("#panel-date").html(lastDate)
+    d3.select("#panel-date").html(lastDate);
   }
 
   renderTotalCases = (animated, prevDate, curDate) => {
@@ -61,7 +61,7 @@ class Panel {
           };
         });
     });
-    d3.select("#panel-date").html(curDate)
+    d3.select("#panel-date").html(curDate);
   };
 }
 

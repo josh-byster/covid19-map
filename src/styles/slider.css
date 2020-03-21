@@ -16,16 +16,16 @@ body {
 }
 
 #slider {
-  height:100px;
+  height: 100px;
   width: 75%;
   left: 25%;
   position: absolute;
 }
 
-@media(max-width:800px) {
+@media (max-width: 800px) {
   #slider {
     width: 100%;
-    left:0;
+    left: 0;
   }
 }
 
@@ -46,8 +46,8 @@ body {
   ); /* W3C */
 }
 
-@media(min-width:800px){
-  #map-shadow{
+@media (min-width: 800px) {
+  #map-shadow {
     left: -25vw;
     width: 100vw;
   }
@@ -121,10 +121,10 @@ body {
 
 @keyframes fadeIn {
   0% {
-    opacity:0;
+    opacity: 0;
   }
   100% {
-    opacity:1;
+    opacity: 1;
   }
 }
 
