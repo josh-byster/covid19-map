@@ -20,8 +20,8 @@ install:
 jobs:
   include:
     - stage: Build & Cypress Tests
-    - # stage name not required, will continue to use `test
-      script: npm ci
-      script: npm install -g serve
-      script: serve -s public -l 8080
-      script: $(npm bin)/cypress run --record
+    # stage name not required, will continue to use `test
+      - script: npm ci
+      - script: npm install -g serve
+      - script: serve -s public -l 8080
+      - script: $(npm bin)/cypress run --record
