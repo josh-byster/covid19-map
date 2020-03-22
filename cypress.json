@@ -1,5 +1,6 @@
 {
-    "blacklistHosts": "www.google-analytics.com",
-    "fixturesFolder": false,
-    "supportFile": false
-  }
+  "blacklistHosts": "www.google-analytics.com",
+  "fixturesFolder": false,
+  "supportFile": false,
+  "projectId": "ycd83q"
+}
