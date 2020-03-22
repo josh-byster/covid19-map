@@ -85,7 +85,7 @@ describe("Smoke Test", function() {
     cy.get("#panel-confirmed").should("have.text", "~555");
   });
 
-  it.only("Changing timeline also changes tooltip display", function() {
+  it("Changing timeline also changes tooltip display", function() {
     cy.get("circle").should("have.length.greaterThan", 0);
     cy.get(".tooltip").should("not.be.visible");
     cy.wait(2500);
