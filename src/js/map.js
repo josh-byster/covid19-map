@@ -252,12 +252,7 @@ class Map {
       d.country
     }</span></b><br/>Total: ${this.numWithCommas(
       d.confirmed
-    )}<br/>Active: <span class="orange">${this.numWithCommas(
-      d.confirmed - d.recovered - d.deaths
-    )}</span></br>
-    Recovered: <span class="green">${this.numWithCommas(
-      d.recovered
-    )}</span><br/>
+    )}<br/>
     Deaths: <span class="red">${this.numWithCommas(d.deaths)}</span>
     `;
 
