@@ -10,7 +10,7 @@ const DEATH_CASES_LINK =
   "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
 
 const RECOVERED_CASES_LINK =
-  "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv";
+  "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
 
 const TOPOLOGY_LINK =
   "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
@@ -28,7 +28,7 @@ const getDataForDate = (confirmed, deaths, recovered, date) =>
     province:
       d["Province/State"] == d["Country/Region"] ? "" : d["Province/State"],
     deaths: deaths[idx][date],
-    recovered: recovered[idx][date]
+    recovered: 0
   }));
 
 const kFormatter = num =>
