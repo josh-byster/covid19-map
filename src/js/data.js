@@ -16,7 +16,7 @@ const TOPOLOGY_LINK =
   "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
 const LAST_REFRESH =
-  "https://api.github.com/repos/CSSEGISandData/COVID-19/commits?path=csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv&page=1&per_page=1";
+  "https://api.github.com/repos/CSSEGISandData/COVID-19/commits?path=csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv&page=1&per_page=1";
 const getDataForDate = (confirmed, deaths, recovered, date) =>
   confirmed.map((d, idx) => ({
     id: d.id,
