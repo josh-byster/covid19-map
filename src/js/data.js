@@ -53,10 +53,16 @@ const getUSDataForDate = (confirmed, deaths, date) => {
     recovered: 0
   }));
 };
-const kFormatter = num =>
-  Math.abs(num) > 999
-    ? Math.sign(num) * (Math.abs(num) / 1000).toFixed(1) + "k"
-    : num.toFixed(0);
+const kFormatter = num => {
+  if(num > 1e6-1){
+    return Math.sign(num) * (Math.abs(num) / 1e6).toFixed(2) + " million"
+  }
+  else if(num > 999){
+    return Math.sign(num) * (Math.abs(num) / 1000).toFixed(1) + "k"
+  } else {
+    return num.toFixed(0);
+  }
+}
 
 const addIndicesToData = (d, startIdx) =>
   d.map((row, idx) => ({ id: startIdx + idx, ...row }));

@@ -122,10 +122,10 @@ class Map {
   };
 
   toColor = d3
-    .scaleSqrt()
-    .domain([this.SCALE_MIN, this.SCALE_MAX / 4])
-    .range(["#4ab7ff", "#004878"])
-    .clamp(true);
+    .scaleSequentialLog()
+    .domain([this.SCALE_MIN, this.SCALE_MAX/4])
+    .interpolator(d3.interpolateRdPu)
+    // .clamp(true);
 
   sizeFunction = d3
     .scaleSqrt()
