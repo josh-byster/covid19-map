@@ -283,8 +283,9 @@ class Map {
 
   renderForState = (animated, duration = 250, delay = 0) => {
     const currentData = this.dateToDataMap[this.curDateIdx];
+    // Filter out cases that don't hit the minimum threshold or don't have geo coords
     const visibleNodes = currentData.filter(
-      (d) => d.confirmed > this.MIN_CASES_SHOWN
+      (d) => d.confirmed > this.MIN_CASES_SHOWN && d.lat != 0
     );
     const updates = this.g.selectAll("circle").data(visibleNodes, (d) => d.id);
 
