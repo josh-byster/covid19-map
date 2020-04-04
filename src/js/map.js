@@ -5,11 +5,11 @@ class Map {
   width = window.innerWidth;
   height = window.innerHeight - 100;
   SCALE_MIN = 1;
-  SCALE_MAX = 70000;
+  SCALE_MAX = 120000;
   SMALLEST_MARKER_PX = 1;
   BIGGEST_MARKER_PX = 25;
   FRAME_MS = 250;
-  MIN_CASES_SHOWN = 100;
+  MIN_CASES_SHOWN = 10;
 
   dateToDataMap = [];
   allDates = [];
@@ -115,9 +115,10 @@ class Map {
 
   toColor = d3
     .scaleSqrt()
-    .domain([this.SCALE_MIN, this.SCALE_MAX / 2])
-    .range(["#f1c40f", "#c0392b"]);
-
+    .domain([this.SCALE_MIN, this.SCALE_MAX / 4])
+    .range(["#4ab7ff", "#004878"]).clamp(true);
+  
+    
   sizeFunction = d3
     .scaleSqrt()
     .domain([this.SCALE_MIN, this.SCALE_MAX])
@@ -129,7 +130,7 @@ class Map {
   setScaling = (scale) => {
     this.sizeFunction
       .domain([this.SCALE_MIN, this.SCALE_MAX / (scale * scale)])
-      .range([this.SMALLEST_MARKER_PX, this.BIGGEST_MARKER_PX / scale]);
+      .range([this.SMALLEST_MARKER_PX/scale, this.BIGGEST_MARKER_PX / scale]);
   };
 
   projection = d3
@@ -140,7 +141,7 @@ class Map {
 
   path = d3.geoPath(this.projection);
 
-  zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", this.zoomed.bind(this));
+  zoom = d3.zoom().scaleExtent([1, 25]).on("zoom", this.zoomed.bind(this));
 
   zoomed() {
     this.g
@@ -255,7 +256,7 @@ class Map {
     `${d.province ? d.province + "<br/>" : ""}<b><span class="countryname">${
       d.country
     }</span></b><br/>Total: ${this.numWithCommas(d.confirmed)}<br/>
-    Deaths: <span class="red">${this.numWithCommas(d.deaths)}</span>
+    Deaths: <span class="orange">${this.numWithCommas(d.deaths)}</span>
     `;
 
   renderForState = (animated, duration = 250, delay = 0) => {
