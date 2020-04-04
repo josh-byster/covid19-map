@@ -153,7 +153,14 @@ class Map {
 
   path = d3.geoPath(this.projection);
 
-  zoom = d3.zoom().scaleExtent([1, 100]).on("zoom", this.zoomed.bind(this));
+  zoom = d3
+    .zoom()
+    .scaleExtent([1, 100])
+    .translateExtent([
+      [-500, -100],
+      [1800, 1000],
+    ])
+    .on("zoom", this.zoomed.bind(this));
 
   zoomed() {
     this.g
