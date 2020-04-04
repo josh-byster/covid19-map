@@ -7,7 +7,7 @@ class Map {
   SCALE_MIN = 1;
   SCALE_MAX = 120000;
   SMALLEST_MARKER_PX = 1;
-  BIGGEST_MARKER_PX = 25;
+  BIGGEST_MARKER_PX = 30;
   FRAME_MS = 250;
   MIN_CASES_SHOWN = 10;
 
@@ -130,15 +130,15 @@ class Map {
   sizeFunction = d3
     .scaleSqrt()
     .domain([this.SCALE_MIN, this.SCALE_MAX])
-    .range([this.SMALLEST_MARKER_PX, this.BIGGEST_MARKER_PX]);
-  // .clamp(true)
+    .range([this.SMALLEST_MARKER_PX, this.BIGGEST_MARKER_PX])
+  .clamp(true)
 
   toSize = (x) => (x == 0 ? 0 : this.sizeFunction(x));
 
   setScaling = (scale) => {
     this.sizeFunction
-      .domain([this.SCALE_MIN, this.SCALE_MAX / (scale * scale)])
-      .range([this.SMALLEST_MARKER_PX / scale, this.BIGGEST_MARKER_PX / scale]);
+      .domain([this.SCALE_MIN, this.SCALE_MAX])
+      .range([this.SMALLEST_MARKER_PX / Math.sqrt(scale), this.BIGGEST_MARKER_PX / Math.sqrt(scale)]);
   };
 
   projection = d3
@@ -149,7 +149,7 @@ class Map {
 
   path = d3.geoPath(this.projection);
 
-  zoom = d3.zoom().scaleExtent([1, 25]).on("zoom", this.zoomed.bind(this));
+  zoom = d3.zoom().scaleExtent([1, 100]).on("zoom", this.zoomed.bind(this));
 
   zoomed() {
     this.g
