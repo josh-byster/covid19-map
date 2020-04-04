@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack-dev-server --config config/webpack.dev.js --host 0.0.0.0",
-    "build": "cross-env NODE_ENV=production webpack --config config/webpack.prod.js"
+    "build": "cross-env NODE_ENV=production webpack --config config/webpack.prod.js",
+    "prettier:check": "prettier --check 'src/**/*.{js,scss,css,html}'",
+    "prettier": "prettier --write 'src/**/*.{js,scss,css,html}'"
   },
   "keywords": [
     "webpack",
