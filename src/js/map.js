@@ -9,6 +9,7 @@ class Map {
   SMALLEST_MARKER_PX = 1;
   BIGGEST_MARKER_PX = 25;
   FRAME_MS = 250;
+  MIN_CASES_SHOWN = 100;
 
   dateToDataMap = [];
   allDates = [];
@@ -30,7 +31,7 @@ class Map {
     this.dateToDataMap = dateToDataMap;
     this.curDateIdx = allDates.length - 1;
     this.confirmed = confirmedWithIndices;
-    this.renderForState(true, 2000,1000);
+    this.renderForState(true, 2000, 1000);
   }
 
   updateForDate(curDate) {
@@ -48,7 +49,7 @@ class Map {
   constructor() {
     window.addEventListener("resize", this.resize);
     const self = this;
-    d3.select("body").on("keydown", function() {
+    d3.select("body").on("keydown", function () {
       const prev = self.allDates[self.curDateIdx];
       if (d3.event.keyCode === 39) {
         // Right arrow
@@ -91,14 +92,14 @@ class Map {
       .enter()
       .append("path")
       .attr("d", this.path)
-      .style("opacity",0)
+      .style("opacity", 0)
       .transition()
       .ease(d3.easeCubicIn)
       .duration(1000)
-      .style("opacity",1);
+      .style("opacity", 1);
   }
 
-  numWithCommas = x => {
+  numWithCommas = (x) => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
@@ -123,9 +124,9 @@ class Map {
     .range([this.SMALLEST_MARKER_PX, this.BIGGEST_MARKER_PX]);
   // .clamp(true)
 
-  toSize = x => (x == 0 ? 0 : this.sizeFunction(x));
+  toSize = (x) => (x == 0 ? 0 : this.sizeFunction(x));
 
-  setScaling = scale => {
+  setScaling = (scale) => {
     this.sizeFunction
       .domain([this.SCALE_MIN, this.SCALE_MAX / (scale * scale)])
       .range([this.SMALLEST_MARKER_PX, this.BIGGEST_MARKER_PX / scale]);
@@ -139,17 +140,14 @@ class Map {
 
   path = d3.geoPath(this.projection);
 
-  zoom = d3
-    .zoom()
-    .scaleExtent([1, 8])
-    .on("zoom", this.zoomed.bind(this));
+  zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", this.zoomed.bind(this));
 
   zoomed() {
     this.g
       // .selectAll('path') // To prevent stroke width from scaling
       .attr("transform", d3.event.transform);
     this.setScaling(d3.event.transform.k);
-    this.g.selectAll("circle").attr("r", d => this.toSize(d.confirmed));
+    this.g.selectAll("circle").attr("r", (d) => this.toSize(d.confirmed));
   }
 
   svg = d3
@@ -203,71 +201,74 @@ class Map {
     this.slider.update(this.slider.parseDate(this.allDates[this.curDateIdx]));
   }
 
-  applyPropsToNodes = nodes => {
+  applyPropsToNodes = (nodes) => {
     const self = this;
     nodes
-      .attr("transform", d => {
+      .attr("transform", (d) => {
         return "translate(" + this.projection([d.long, d.lat]) + ")";
       })
       //add Tool Tip
-      .on("mouseover", function(d) {
+      .on("mouseover", function (d) {
         self.tooltipHoverId = d.id;
         d3.select(this).classed("hover", true);
-        self.tooltip
-          .transition()
-          .duration(500)
-          .style("opacity", 0.9);
+        self.tooltip.transition().duration(500).style("opacity", 0.9);
         self.tooltip
           .html(self.getTooltipText(d))
           .style("display", "block")
           .style("left", d3.event.pageX + "px")
           .style("top", d3.event.pageY + "px");
       })
-      .on("mousemove", function() {
+      .on("mousemove", function () {
         self.tooltip
           .style("left", d3.event.pageX + 10 + "px")
           .style("top", d3.event.pageY + 5 + "px");
       })
-      .on("mouseout", function() {
+      .on("mouseout", function (d) {
         d3.select(this).classed("hover", false);
-        self.tooltip
-          .transition()
-          .duration(1000)
-          .style("opacity", 0)
-          .on("end", () => {
-            self.tooltipHoverId = -1;
-          });
+        if (self.tooltipHoverId == d.id) {
+          self.tooltipHoverId = -1;
+        }
+        self.hideTooltip();
       });
   };
 
-  getNumInfectedCountries = data => {
+  hideTooltip = () => {
+    const self = this;
+    this.tooltip
+      .transition()
+      .duration(1500)
+      .style("opacity", 0)
+      .on("end", function () {
+        self.tooltipHoverId = -1;
+      });
+  };
+  getNumInfectedCountries = (data) => {
     return data
-      .filter(obj => +obj.confirmed > 0)
-      .map(obj => obj.country)
+      .filter((obj) => +obj.confirmed > 0)
+      .map((obj) => obj.country)
       .filter((val, i, arr) => arr.indexOf(val) === i);
   };
 
-  getElemForId = (data, id) => data.find(d => d.id === id)
+  getElemForId = (data, id) => data.find((d) => d.id === id);
 
-  getTooltipText = d =>
+  getTooltipText = (d) =>
     `${d.province ? d.province + "<br/>" : ""}<b><span class="countryname">${
       d.country
-    }</span></b><br/>Total: ${this.numWithCommas(
-      d.confirmed
-    )}<br/>
+    }</span></b><br/>Total: ${this.numWithCommas(d.confirmed)}<br/>
     Deaths: <span class="red">${this.numWithCommas(d.deaths)}</span>
     `;
 
-  renderForState = (animated, duration = 250,delay=0) => {
+  renderForState = (animated, duration = 250, delay = 0) => {
     const currentData = this.dateToDataMap[this.curDateIdx];
-    const updates = this.g.selectAll("circle").data(currentData, d => d.id);
+    const visibleNodes = currentData.filter((d) => d.confirmed > this.MIN_CASES_SHOWN);
+    const updates = this.g.selectAll("circle").data(visibleNodes, (d) => d.id);
 
     updates
       .enter()
       .append("circle")
       .call(this.applyPropsToNodes)
       .merge(updates)
-      .style("fill", d => this.toColor(d.confirmed));
+      .style("fill", (d) => this.toColor(d.confirmed));
 
     if (animated) {
       this.g
@@ -275,14 +276,20 @@ class Map {
         .transition()
         .duration(duration)
         .delay(delay)
-        .attr("r", d => this.toSize(d.confirmed));
+        .attr("r", (d) => this.toSize(d.confirmed));
     } else {
-      this.g.selectAll("circle").attr("r", d => this.toSize(d.confirmed));
+      this.g.selectAll("circle").attr("r", (d) => this.toSize(d.confirmed));
     }
     updates.exit().remove();
 
+    if (!this.getElemForId(visibleNodes, this.tooltipHoverId)) {
+      this.hideTooltip();
+    }
+
     if (this.tooltipHoverId !== -1) {
-      this.tooltip.html(this.getTooltipText(this.getElemForId(currentData,this.tooltipHoverId)));
+      this.tooltip.html(
+        this.getTooltipText(this.getElemForId(currentData, this.tooltipHoverId))
+      );
     }
   };
 }

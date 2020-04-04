@@ -49,7 +49,7 @@ const getUSDataForDate = (confirmed, deaths, date) => {
       d["Admin2"],
     deaths: deaths[idx][date],
     recovered: 0
-  })).filter(d => d.confirmed > 10);
+  }));
 };
 const kFormatter = num =>
   Math.abs(num) > 999
