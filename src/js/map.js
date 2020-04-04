@@ -85,11 +85,19 @@ class Map {
 
   setTopology(topology) {
     // Create the base map
-    const geojson = topojson.feature(topology, topology.objects.countries);
-    this.g
-      .selectAll("path")
-      .data(geojson.features)
-      .enter()
+    let geojson;
+    let object;
+
+    if (topology.objects.states) {
+      geojson = topojson.feature(topology, topology.objects.states);
+      object = this.states;
+    } else {
+      geojson = topojson.feature(topology, topology.objects.countries);
+      object = this.countries;
+    }
+    const pathObj = object.selectAll("path").data(geojson.features);
+
+    pathObj.enter()
       .append("path")
       .attr("d", this.path)
       .style("opacity", 0)
@@ -116,9 +124,9 @@ class Map {
   toColor = d3
     .scaleSqrt()
     .domain([this.SCALE_MIN, this.SCALE_MAX / 4])
-    .range(["#4ab7ff", "#004878"]).clamp(true);
-  
-    
+    .range(["#4ab7ff", "#004878"])
+    .clamp(true);
+
   sizeFunction = d3
     .scaleSqrt()
     .domain([this.SCALE_MIN, this.SCALE_MAX])
@@ -130,7 +138,7 @@ class Map {
   setScaling = (scale) => {
     this.sizeFunction
       .domain([this.SCALE_MIN, this.SCALE_MAX / (scale * scale)])
-      .range([this.SMALLEST_MARKER_PX/scale, this.BIGGEST_MARKER_PX / scale]);
+      .range([this.SMALLEST_MARKER_PX / scale, this.BIGGEST_MARKER_PX / scale]);
   };
 
   projection = d3
@@ -159,6 +167,9 @@ class Map {
     .call(this.zoom);
 
   g = this.svg.append("g");
+
+  countries = this.g.append("g").classed("countries", true);
+  states = this.g.append("g").classed("states", true);
 
   // Define the div for the tooltip
   tooltip = d3
@@ -237,7 +248,7 @@ class Map {
     const self = this;
     this.tooltip
       .transition()
-      .duration(1500)
+      .duration(1000)
       .style("opacity", 0)
       .on("end", function () {
         self.tooltipHoverId = -1;
@@ -261,7 +272,9 @@ class Map {
 
   renderForState = (animated, duration = 250, delay = 0) => {
     const currentData = this.dateToDataMap[this.curDateIdx];
-    const visibleNodes = currentData.filter((d) => d.confirmed > this.MIN_CASES_SHOWN);
+    const visibleNodes = currentData.filter(
+      (d) => d.confirmed > this.MIN_CASES_SHOWN
+    );
     const updates = this.g.selectAll("circle").data(visibleNodes, (d) => d.id);
 
     updates

@@ -15,6 +15,8 @@ const RECOVERED_CASES_LINK =
 const TOPOLOGY_LINK =
   "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
+  const STATE_TOPOLOGY_LINK =
+  "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
 const US_CASES_LINK =
   "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv";
 const US_DEATHS_LINK =
@@ -109,7 +111,7 @@ const processData = (confirmed, deaths, recovered, us_conf, us_deaths) => {
   };
 };
 
-const fetchTopology = d3.json(TOPOLOGY_LINK);
+const fetchTopology = Promise.all([d3.json(TOPOLOGY_LINK),d3.json(STATE_TOPOLOGY_LINK)]);
 
 const fetchData = Promise.all([
   d3.csv(CONFIRMED_CASES_LINK),

@@ -12,8 +12,8 @@ body {
 }
 path {
   fill: #fff;
-  stroke: transparent;
-  stroke-width: 0.1px;
+  stroke: #808080;
+  stroke-width: 0.05px;
 }
 
 div.tooltip {
@@ -146,3 +146,7 @@ div.tooltip.active {
   font-size:16px;
 }
 
+
+/* .countries path {
+  fill: #00ffff;
+} */
