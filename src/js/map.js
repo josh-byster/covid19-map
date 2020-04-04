@@ -97,7 +97,8 @@ class Map {
     }
     const pathObj = object.selectAll("path").data(geojson.features);
 
-    pathObj.enter()
+    pathObj
+      .enter()
       .append("path")
       .attr("d", this.path)
       .style("opacity", 0)
@@ -123,22 +124,25 @@ class Map {
 
   toColor = d3
     .scaleSequentialLog()
-    .domain([this.SCALE_MIN, this.SCALE_MAX/4])
-    .interpolator(d3.interpolateRdPu)
-    // .clamp(true);
+    .domain([this.SCALE_MIN, this.SCALE_MAX / 4])
+    .interpolator(d3.interpolateRdPu);
+  // .clamp(true);
 
   sizeFunction = d3
     .scaleSqrt()
     .domain([this.SCALE_MIN, this.SCALE_MAX])
     .range([this.SMALLEST_MARKER_PX, this.BIGGEST_MARKER_PX])
-  .clamp(true)
+    .clamp(true);
 
   toSize = (x) => (x == 0 ? 0 : this.sizeFunction(x));
 
   setScaling = (scale) => {
     this.sizeFunction
       .domain([this.SCALE_MIN, this.SCALE_MAX])
-      .range([this.SMALLEST_MARKER_PX / Math.sqrt(scale), this.BIGGEST_MARKER_PX / Math.sqrt(scale)]);
+      .range([
+        this.SMALLEST_MARKER_PX / Math.sqrt(scale),
+        this.BIGGEST_MARKER_PX / Math.sqrt(scale),
+      ]);
   };
 
   projection = d3

@@ -7,12 +7,12 @@ class Slider {
   setMap(map) {
     this.map = map;
   }
-  
+
   computeDimensions = () => {
     return {
       width:
         Math.min(500, window.innerWidth) - this.margin.left - this.margin.right,
-      height: 100 - this.margin.top - this.margin.bottom
+      height: 100 - this.margin.top - this.margin.bottom,
     };
   };
 
@@ -21,40 +21,39 @@ class Slider {
     this.endDate = this.parseDate(endDate);
 
     this.x = d3
-    .scaleTime()
-    .domain([this.startDate, this.endDate])
-    .range([0, this.targetValue])
-    .clamp(true);
+      .scaleTime()
+      .domain([this.startDate, this.endDate])
+      .range([0, this.targetValue])
+      .clamp(true);
 
     this.slider
-    .insert("g", ".track-overlay")
-    .attr("class", "ticks")
-    .attr("transform", "translate(0," + 18 + ")")
-    .selectAll("text")
-    .data(this.x.ticks(this.getNumTicks()))
-    .enter()
-    .append("text")
-    .attr("x", this.x)
-    .attr("y", 10)
-    .attr("text-anchor", "middle")
-    .text(d => {
-      return this.formatBottomDate(d);
-    });
+      .insert("g", ".track-overlay")
+      .attr("class", "ticks")
+      .attr("transform", "translate(0," + 18 + ")")
+      .selectAll("text")
+      .data(this.x.ticks(this.getNumTicks()))
+      .enter()
+      .append("text")
+      .attr("x", this.x)
+      .attr("y", 10)
+      .attr("text-anchor", "middle")
+      .text((d) => {
+        return this.formatBottomDate(d);
+      });
 
-  this.handle = this.slider
-    .insert("circle", ".track-overlay")
-    .attr("class", "handle")
-    .attr("r", 15)
-    .attr("cx", this.targetValue)
+    this.handle = this.slider
+      .insert("circle", ".track-overlay")
+      .attr("class", "handle")
+      .attr("r", 15)
+      .attr("cx", this.targetValue);
 
-  this.label = this.slider
-    .append("text")
-    .attr("class", "label")
-    .attr("text-anchor", "middle")
-    .text(this.formatSliderDate(this.endDate))
-    .attr("transform", "translate(0," + -25 + ")")
-    .attr("x", this.targetValue);
-
+    this.label = this.slider
+      .append("text")
+      .attr("class", "label")
+      .attr("text-anchor", "middle")
+      .text(this.formatSliderDate(this.endDate))
+      .attr("transform", "translate(0," + -25 + ")")
+      .attr("x", this.targetValue);
   }
 
   margin = { top: 0, right: 50, bottom: 0, left: 50 };
@@ -74,7 +73,6 @@ class Slider {
   map;
   playButton = d3.select("#play-button");
   getNumTicks = () => (this.computeDimensions().width > 300 ? 4 : 2);
-
 
   slider = this.sliderSvg
     .append("g")
@@ -120,13 +118,13 @@ class Slider {
       .attr("x", this.x)
       .attr("y", 10)
       .attr("text-anchor", "middle")
-      .text(d => {
+      .text((d) => {
         return this.formatBottomDate(d);
       });
 
     t.exit().remove();
 
-    const convertToNew = t => this.x(oldX.invert(t));
+    const convertToNew = (t) => this.x(oldX.invert(t));
 
     const currentHandlePos = this.handle.attr("cx");
     const newHandlePos = convertToNew(currentHandlePos);
@@ -146,27 +144,25 @@ class Slider {
       .attr("class", "track")
       .attr("x1", 0)
       .attr("x2", this.targetValue)
-      .select(function() {
+      .select(function () {
         return this.parentNode.appendChild(this.cloneNode(true));
       })
       .attr("class", "track-inset")
-      .select(function() {
+      .select(function () {
         return this.parentNode.appendChild(this.cloneNode(true));
       })
       .attr("class", "track-overlay")
       .call(
         d3
           .drag()
-          .on("start.interrupt", function() {
+          .on("start.interrupt", function () {
             self.slider.interrupt();
           })
-          .on("start drag", function() {
+          .on("start drag", function () {
             self.currentValue = d3.event.x;
             self.update(self.x.invert(self.currentValue));
           })
       );
-
-
   }
 
   update(h) {

@@ -50,7 +50,6 @@ div.tooltip.active {
   background-color: #3e4147;
 }
 
-
 .red {
   color: #e74c3c;
 }
@@ -64,21 +63,21 @@ div.tooltip.active {
 }
 
 #panel {
-  opacity:0.97;
+  opacity: 0.97;
   position: fixed;
   width: 25%;
   overflow: scroll;
-  min-width:250px;
+  min-width: 250px;
   height: 100%;
-  background-color:#31353e;
-  z-index:10000;
+  background-color: #31353e;
+  z-index: 10000;
   font-family: "Lato";
 }
-@media(max-width:800px){
-  #panel{
+@media (max-width: 800px) {
+  #panel {
     position: relative;
-    width:100%;
-    opacity:1;
+    width: 100%;
+    opacity: 1;
   }
 }
 #info {
@@ -88,17 +87,16 @@ div.tooltip.active {
 
 #panel #title {
   color: #fff;
-  font-size:30px;
+  font-size: 30px;
   font-weight: 600;
-
 }
 
 #panel #subtitle {
-  color : #bfbfbf;
+  color: #bfbfbf;
 }
 
 #panel #description {
-  padding-top:30px;
+  padding-top: 30px;
   color: #fff;
 }
 
@@ -109,43 +107,41 @@ div.tooltip.active {
 #panel a {
   text-decoration: none;
   transition: color 0.5s;
-  color:#8e8e92;
+  color: #8e8e92;
 }
-#panel a:hover{
+#panel a:hover {
   color: #0097e6;
   transition: color 0.5s;
 }
 
 @keyframes fadeIn {
   0% {
-    opacity:0;
+    opacity: 0;
   }
   100% {
-    opacity:1;
+    opacity: 1;
   }
 }
 
-
 #description {
-  font-size:15px;
-  font-weight:400;
+  font-size: 15px;
+  font-weight: 400;
 }
 
 .sum {
-  padding-top:5px;
-  width:180px;
-  display:block;
-  font-size:30px;
+  padding-top: 5px;
+  width: 180px;
+  display: block;
+  font-size: 30px;
 }
 
 #panel-confirmed {
-  color:white;
+  color: white;
 }
 
 .count-subtext {
-  font-size:16px;
+  font-size: 16px;
 }
-
 
 /* .countries path {
   fill: #00ffff;

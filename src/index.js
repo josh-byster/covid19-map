@@ -12,11 +12,13 @@ map.setSlider(slider);
 slider.setMap(map);
 let panel;
 
-Promise.all([fetchData, fetchTopology]).then(([data, [countryTop,stateTop]]) => {
-  map.setTopology(countryTop);
-  map.setTopology(stateTop)
-  map.setData(data);
-  slider.setDateRange(data.startDate, data.endDate);
-  panel = new Panel(data.totals,data.allDates);
-  map.setPanel(panel);
-});
+Promise.all([fetchData, fetchTopology]).then(
+  ([data, [countryTop, stateTop]]) => {
+    map.setTopology(countryTop);
+    map.setTopology(stateTop);
+    map.setData(data);
+    slider.setDateRange(data.startDate, data.endDate);
+    panel = new Panel(data.totals, data.allDates);
+    map.setPanel(panel);
+  }
+);
