@@ -18,7 +18,7 @@ const TOPOLOGY_LINK =
 const US_CASES_LINK =
   "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv";
 const US_DEATHS_LINK =
-  "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv";
+  "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv";
 
 const LAST_REFRESH =
   "https://api.github.com/repos/CSSEGISandData/COVID-19/commits?path=csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv&page=1&per_page=1";
@@ -38,7 +38,7 @@ const getDataForDate = (confirmed, deaths, date) =>
   }));
 
 const getUSDataForDate = (confirmed, deaths, date) => {
-  return confirmed.filter(d => d[date] > 10).map((d, idx) => ({
+  return confirmed.map((d, idx) => ({
     id: d.id,
     lat: d.Lat,
     long: d.Long_,
@@ -49,7 +49,7 @@ const getUSDataForDate = (confirmed, deaths, date) => {
       d["Admin2"],
     deaths: deaths[idx][date],
     recovered: 0
-  }));
+  })).filter(d => d.confirmed > 10);
 };
 const kFormatter = num =>
   Math.abs(num) > 999
@@ -83,8 +83,6 @@ const processData = (confirmed, deaths, recovered, us_conf, us_deaths) => {
     addIndicesToData(d, 100000)
   );
   const allDates = Object.keys(confirmed[0]).slice(5);
-  console.log(us_conf)
-  console.log(us_deaths)
   const dateToDataMap = allDates.map(curDate =>
     getDataForDate(confirmed, deaths, curDate).concat(getUSDataForDate(us_conf,us_deaths,curDate))
   );

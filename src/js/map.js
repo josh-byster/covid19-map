@@ -247,6 +247,8 @@ class Map {
       .filter((val, i, arr) => arr.indexOf(val) === i);
   };
 
+  getElemForId = (data, id) => data.find(d => d.id === id)
+
   getTooltipText = d =>
     `${d.province ? d.province + "<br/>" : ""}<b><span class="countryname">${
       d.country
@@ -280,7 +282,7 @@ class Map {
     updates.exit().remove();
 
     if (this.tooltipHoverId !== -1) {
-      this.tooltip.html(this.getTooltipText(currentData[this.tooltipHoverId]));
+      this.tooltip.html(this.getTooltipText(this.getElemForId(currentData,this.tooltipHoverId)));
     }
   };
 }
