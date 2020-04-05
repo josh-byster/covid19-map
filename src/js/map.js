@@ -155,7 +155,7 @@ class Map {
 
   zoom = d3
     .zoom()
-    .scaleExtent([1, 100])
+    .scaleExtent([0.25, 100])
     .translateExtent([
       [-500, -100],
       [1800, 1000],
