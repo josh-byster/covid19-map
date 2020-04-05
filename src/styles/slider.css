@@ -53,7 +53,7 @@ body {
 @media (min-width: 800px) {
   #map-shadow {
     left: -25vw;
-    width: 100vw;
+    width: 125vw;
   }
 }
 #vis svg {

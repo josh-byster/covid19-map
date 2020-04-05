@@ -9,14 +9,15 @@ class Panel {
     const currentDayTotals = totals[lastDate];
     [
       { div: "#panel-confirmed", count: currentDayTotals.confirmed },
-      { div: "#panel-recovered", count: currentDayTotals.recovered },
+      // { div: "#panel-recovered", count: currentDayTotals.recovered },
       { div: "#panel-deaths", count: currentDayTotals.deaths },
-      { div: "#panel-active", count: currentDayTotals.active },
+      // { div: "#panel-active", count: currentDayTotals.active },
     ].forEach((obj) => {
       d3.select(obj.div)
         .transition()
         .duration(4000)
         .delay(500)
+        .ease(d3.easeExpInOut)
         .tween("text", function () {
           const i = d3.interpolate(0, obj.count);
           return function (t) {
@@ -54,6 +55,7 @@ class Panel {
         .transition()
         .duration(animated ? 500 : 0)
         .delay(0)
+        .ease(d3.easeExpInOut)
         .tween("text", function () {
           const i = d3.interpolate(obj.prevCount, obj.newCount);
           return function (t) {

@@ -111,7 +111,7 @@ div.tooltip.active {
   font-size: 16px;
   border-radius: 3px;
   border: 2px solid #fff;
-  transition: background-color 0.5s;
+  transition: background-color 0.5s, border-color 0.5s;
   font-weight: 600;
 }
 
@@ -121,6 +121,9 @@ div.tooltip.active {
   transition: background-color 0.5s;
 }
 
+#toggle-collapse.panel-collapsed {
+  color: #000;
+}
 #info {
   animation: fadeIn 3s;
   padding: 70px 30px 40px 40px;

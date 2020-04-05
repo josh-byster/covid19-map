@@ -27,8 +27,7 @@ const togglePanel = () => {
   const panel = document.getElementById("panel");
   const btn = document.getElementById("toggle-collapse");
   const slider = document.getElementById("slider");
-  panel.classList.toggle("panel-collapsed");
-  slider.classList.toggle("panel-collapsed");
+  [panel, slider, btn].forEach((t) => t.classList.toggle("panel-collapsed"));
   if (panel.classList.contains("panel-collapsed")) {
     btn.innerHTML = "Show";
   } else {
