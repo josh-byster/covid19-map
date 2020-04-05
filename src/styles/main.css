@@ -72,17 +72,58 @@ div.tooltip.active {
   background-color: #31353e;
   z-index: 10000;
   font-family: "Lato";
+  transition: width 1s, min-width 1s;
 }
+
+#panel.panel-collapsed {
+  width: 0;
+  min-width: 0;
+  transition: width 1s;
+}
+
 @media (max-width: 800px) {
   #panel {
     position: relative;
     width: 100%;
+    max-height: 1200px;
+    transition: max-height 0.5s;
     opacity: 1;
   }
+  #panel.panel-collapsed {
+    width: 100%;
+    max-height: 0;
+    transition: max-height 0.5s;
+  }
 }
+
+#toggle-collapse {
+  position: absolute;
+  left: 7px;
+  line-height: 0.8;
+  top: 20px;
+  z-index: 10001;
+  outline: none;
+  padding: 5px;
+  background-color: transparent;
+  color: #fff;
+  border-width: 0px;
+  font-family: "Lato", Arial, sans-serif;
+  font-size: 16px;
+  border-radius: 3px;
+  border: 2px solid #fff;
+  transition: background-color 0.5s;
+  font-weight: 600;
+}
+
+#toggle-collapse:hover {
+  background-color: #fff;
+  color: #000;
+  transition: background-color 0.5s;
+}
+
 #info {
   animation: fadeIn 3s;
-  padding: 30px;
+  padding: 70px 30px 40px 40px;
 }
 
 #panel #title {

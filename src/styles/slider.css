@@ -22,6 +22,10 @@ body {
   position: absolute;
 }
 
+#slider.panel-collapsed {
+  width: 100%;
+  left: 0%;
+}
 @media (max-width: 800px) {
   #slider {
     width: 100%;

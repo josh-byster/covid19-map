@@ -22,3 +22,18 @@ Promise.all([fetchData, fetchTopology]).then(
     map.setPanel(panel);
   }
 );
+
+const togglePanel = () => {
+  const panel = document.getElementById("panel");
+  const btn = document.getElementById("toggle-collapse");
+  const slider = document.getElementById("slider");
+  panel.classList.toggle("panel-collapsed");
+  slider.classList.toggle("panel-collapsed");
+  if (panel.classList.contains("panel-collapsed")) {
+    btn.innerHTML = "Show";
+  } else {
+    btn.innerHTML = "X";
+  }
+};
+
+window.togglePanel = togglePanel;
