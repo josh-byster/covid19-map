@@ -5,11 +5,11 @@ class Map {
   width = window.innerWidth;
   height = window.innerHeight - 100;
   SCALE_MIN = 1;
-  SCALE_MAX = 120000;
+  SCALE_MAX = 520000;
   SMALLEST_MARKER_PX = 1;
   BIGGEST_MARKER_PX = 30;
   FRAME_MS = 250;
-  MIN_CASES_SHOWN = 10;
+  MIN_CASES_SHOWN = 500;
 
   dateToDataMap = [];
   allDates = [];
