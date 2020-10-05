@@ -5,7 +5,7 @@ class Map {
   width = window.innerWidth;
   height = window.innerHeight - 100;
   SCALE_MIN = 1;
-  SCALE_MAX = 520000;
+  SCALE_MAX = 2000*1000;
   SMALLEST_MARKER_PX = 1;
   BIGGEST_MARKER_PX = 30;
   FRAME_MS = 250;
