@@ -9,7 +9,7 @@ class Map {
   SMALLEST_MARKER_PX = 1;
   BIGGEST_MARKER_PX = 30;
   FRAME_MS = 250;
-  MIN_CASES_SHOWN = 500;
+  MIN_CASES_SHOWN = 3000;
 
   dateToDataMap = [];
   allDates = [];
