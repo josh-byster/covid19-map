@@ -40,13 +40,17 @@ module.exports = {
      *
      * Copies files from target to destination folder.
      */
-    new CopyWebpackPlugin([
+    new CopyWebpackPlugin({
+      patterns: [
       {
         from: paths.static,
         to: 'assets',
-        ignore: ['*.DS_Store'],
-      },
-    ]),
+        noErrorOnMissing: true,
+        globOptions: {
+          ignore: ['*.DS_Store'],
+        }
+      }
+    ]}),
 
     /**
      * HtmlWebpackPlugin
@@ -76,7 +80,7 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: ['babel-loader', 'eslint-loader'],
+        use: ['babel-loader'],
       },
 
       /**
