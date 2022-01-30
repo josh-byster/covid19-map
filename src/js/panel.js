@@ -21,7 +21,7 @@ class Panel {
         .tween("text", function () {
           const i = d3.interpolate(0, obj.count);
           return function (t) {
-            d3.select(this).text(`~${kFormatter(i(t))}`);
+            d3.select(this).text(`${kFormatter(i(t))}`);
           };
         });
     });
@@ -59,7 +59,7 @@ class Panel {
         .tween("text", function () {
           const i = d3.interpolate(obj.prevCount, obj.newCount);
           return function (t) {
-            d3.select(this).text(`~${kFormatter(i(t))}`);
+            d3.select(this).text(`${kFormatter(i(t))}`);
           };
         });
     });

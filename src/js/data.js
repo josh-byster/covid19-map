@@ -35,9 +35,9 @@ const getDataForDate = (confirmed, deaths, date) =>
 
 const kFormatter = (num) => {
   if (num > 1e6 - 1) {
-    return Math.sign(num) * (Math.abs(num) / 1e6).toFixed(2) + " million";
+    return parseFloat(Math.sign(num) * (Math.abs(num) / 1e6)).toFixed(1) + " million";
   } else if (num > 999) {
-    return Math.sign(num) * (Math.abs(num) / 1000).toFixed(1) + "k";
+    return parseFloat(Math.sign(num) * (Math.abs(num) / 1000)).toFixed(1) + "k";
   } else {
     return num.toFixed(0);
   }
