@@ -1,7 +1,7 @@
 const d3 = require("d3");
 class Slider {
-  formatBottomDate = d3.timeFormat("%b %-d");
-  formatSliderDate = d3.timeFormat("%b %-d");
+  formatBottomDate = d3.timeFormat("%b %Y");
+  formatSliderDate = d3.timeFormat("%b %-d %Y");
   parseDate = d3.timeParse("%m/%d/%y");
 
   setMap(map) {

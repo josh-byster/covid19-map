@@ -5,11 +5,11 @@ class Map {
   width = window.innerWidth;
   height = window.innerHeight - 100;
   SCALE_MIN = 1;
-  SCALE_MAX = 2000*1000;
+  SCALE_MAX = 40000*1000;
   SMALLEST_MARKER_PX = 1;
-  BIGGEST_MARKER_PX = 30;
+  BIGGEST_MARKER_PX = 50;
   FRAME_MS = 250;
-  MIN_CASES_SHOWN = 3000;
+  MIN_CASES_SHOWN = 10000;
 
   dateToDataMap = [];
   allDates = [];
@@ -124,12 +124,13 @@ class Map {
 
   toColor = d3
     .scaleSequentialLog()
-    .domain([this.SCALE_MIN, this.SCALE_MAX / 4])
+    .domain([this.SCALE_MIN, this.SCALE_MAX])
     .interpolator(d3.interpolateRdPu);
   // .clamp(true);
 
   sizeFunction = d3
-    .scaleSqrt()
+    .scalePow()
+    .exponent(0.55)
     .domain([this.SCALE_MIN, this.SCALE_MAX])
     .range([this.SMALLEST_MARKER_PX, this.BIGGEST_MARKER_PX])
     .clamp(true);
