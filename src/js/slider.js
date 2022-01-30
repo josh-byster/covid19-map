@@ -158,8 +158,8 @@ class Slider {
           .on("start.interrupt", function () {
             self.slider.interrupt();
           })
-          .on("start drag", function () {
-            self.currentValue = d3.event.x;
+          .on("start drag", function (d) {
+            self.currentValue = d.x;
             self.update(self.x.invert(self.currentValue));
           })
       );

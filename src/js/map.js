@@ -49,21 +49,21 @@ class Map {
   constructor() {
     window.addEventListener("resize", this.resize);
     const self = this;
-    d3.select("body").on("keydown", function () {
+    d3.select("body").on("keydown", function (d) {
       const prev = self.allDates[self.curDateIdx];
-      if (d3.event.keyCode === 39) {
+      if (d.keyCode === 39) {
         // Right arrow
         self.incrementDate();
         self.renderForState(true);
         self.updateSlider();
         self.panel.renderTotalCases(true, prev, self.allDates[self.curDateIdx]);
-      } else if (d3.event.keyCode === 37) {
+      } else if (d.keyCode === 37) {
         // Left arrow
         self.decrementDate();
         self.renderForState(true);
         self.updateSlider();
         self.panel.renderTotalCases(true, prev, self.allDates[self.curDateIdx]);
-      } else if (d3.event.keyCode === 32) {
+      } else if (d.keyCode === 32) {
         self.toggleAnimation();
       }
     });
@@ -162,11 +162,11 @@ class Map {
     ])
     .on("zoom", this.zoomed.bind(this));
 
-  zoomed() {
+  zoomed(d) {
     this.g
       // .selectAll('path') // To prevent stroke width from scaling
-      .attr("transform", d3.event.transform);
-    this.setScaling(d3.event.transform.k);
+      .attr("transform", d.transform);
+    this.setScaling(d.transform.k);
     this.g.selectAll("circle").attr("r", (d) => this.toSize(d.confirmed));
   }
 
@@ -231,20 +231,20 @@ class Map {
         return "translate(" + this.projection([d.long, d.lat]) + ")";
       })
       //add Tool Tip
-      .on("mouseover", function (d) {
-        self.tooltipHoverId = d.id;
+      .on("mouseover", function (d, data) {
+        self.tooltipHoverId = data.id;
         d3.select(this).classed("hover", true);
         self.tooltip.transition().duration(500).style("opacity", 0.9);
         self.tooltip
-          .html(self.getTooltipText(d))
+          .html(self.getTooltipText(data))
           .style("display", "block")
-          .style("left", d3.event.pageX + "px")
-          .style("top", d3.event.pageY + "px");
+          .style("left", d.pageX + "px")
+          .style("top", d.pageY + "px");
       })
-      .on("mousemove", function () {
+      .on("mousemove", function (d) {
         self.tooltip
-          .style("left", d3.event.pageX + 10 + "px")
-          .style("top", d3.event.pageY + 5 + "px");
+          .style("left", d.pageX + 10 + "px")
+          .style("top", d.pageY + 5 + "px");
       })
       .on("mouseout", function (d) {
         d3.select(this).classed("hover", false);
